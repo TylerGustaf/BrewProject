@@ -1,10 +1,12 @@
 //Declare pin functions for Teensy
-#define stp 3
-#define dir 4
-#define EN  6
-#define MS1 9
-#define MS2 10
+#define stp 8
+#define dir 9
+#define EN  5
+#define MS1 6
+#define MS2 7
+#define RST 10
 #define led 13
+#define tst 23
 
 //Declare variables for functions
 char user_input;
@@ -96,6 +98,7 @@ void loop() {
             digitalWrite(led, HIGH);
             delay(1000);
             digitalWrite(led, LOW);
+            StepForwardDefault();
             sendPacket(packetSize - PACKET_OVERHEAD_BYTES, buffer + 2);
           }
           else{
@@ -106,26 +109,29 @@ void loop() {
           }
         }
         // reset the count
-        count = 0;
+        count = 0; 
       }
     }
   }
 }
 
-//Default microstep mode function
+//Default microstep mode function 
 void StepForwardDefault()
 {
-  Serial.println("Moving forward at default step mode.");
+  digitalWrite(EN, LOW);
   digitalWrite(dir, LOW); //Pull direction pin low to move "forward"
-  for(x = 0; x < 1000; x++)  //Loop the forward stepping enough times for motion to be visible
+  digitalWrite(MS1, HIGH);
+  digitalWrite(MS2, HIGH);
+  digitalWrite(MS1, LOW);
+  digitalWrite(MS2, LOW);
+  digitalWrite(RST, HIGH);
+  for(x = 0; x < 200; x++)  //Loop the forward stepping enough times for motion to be visible
   {
     digitalWrite(stp,HIGH); //Trigger one step forward
     delay(1);
     digitalWrite(stp,LOW); //Pull step pin low so it can be triggered again
     delay(1);
   }
-  Serial.println("Enter new option");
-  Serial.println();
 }
 
 //Reverse default microstep mode function
