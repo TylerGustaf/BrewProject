@@ -1,0 +1,1 @@
+/home/pi/Desktop/BrewProject/GUI_for_Motor/build/CMakeFiles/TeensyControl.dir
