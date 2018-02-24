@@ -79,7 +79,15 @@ gpointer Serial_Read_Thread()
                     if(validatePacket(packetSize, buffer)){  //If the packet is valid,
                         //Use the data from the packet
                         g_mutex_lock(mutex_to_protect_voltage_display);
-                        sprintf(label_recieved_value,"%s %d", "Value recieved!", (int)buffer[3]);
+                        if(buffer[2] == 'M'){
+                            sprintf(label_recieved_value,"%s %d %s %d %s", "Motor Turned", (int)buffer[4],"Steps",(int)buffer[5],"Times");
+                        }
+                        else if(buffer[2] == 'F'){
+                            sprintf(label_recieved_value,"%s %d", "Flow is:", (int)buffer[3]);
+                        }
+                        else if(buffer[2] == 'F'){
+                            sprintf(label_recieved_value,"%s", "Unrecognized Packet");
+                        }
                         g_mutex_unlock(mutex_to_protect_voltage_display);
                     }
                     //reset the count

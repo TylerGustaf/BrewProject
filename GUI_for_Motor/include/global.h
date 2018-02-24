@@ -27,7 +27,11 @@ typedef struct
   GtkWidget *label_sent;			//!< The display field for the byte package being sent to the Teensy
   GtkWidget *label_recieved;		//!< The display field for the package recieved from the Teensy
   GtkWidget *teensycommand;			//!< The entry field for the red color value
-  
+  GtkWidget *stepnum;	
+  GtkWidget *stepmulti;	
+  GtkWidget *forwardbutton;	
+  GtkWidget *backbutton;	
+  GtkWidget *motordir;
 } Gui_Window_AppWidgets; 
 
 extern Gui_Window_AppWidgets *gui_app;	//!< Main pointer for all the GUI widgets

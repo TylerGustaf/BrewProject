@@ -4,15 +4,16 @@
 #define EN  5
 #define MS1 6
 #define MS2 7
-#define RST 10
+#define FLO 14
 #define led 13
-#define tst 23
 
 //Declare variables for functions
 char user_input;
 int x;
 int y;
+int i,j;
 int state;
+volatile int flowCount = 0;
 
 // define packet parameters
 const byte PACKET_START_BYTE = 0xAA;
@@ -28,17 +29,10 @@ void setup() {
   pinMode(MS2, OUTPUT);
   pinMode(EN, OUTPUT);
   pinMode(led, OUTPUT);
+  pinMode(FLO, INPUT);
+  attachInterrupt(digitalPinToInterrupt(FLO), CountFlow, RISING);
   resetEDPins(); //Set step, direction, microstep and enable pins to default states
   Serial.begin(9600); //Open Serial connection for debugging
-  Serial.println("Begin motor control");
-  Serial.println();
-  //Print function list for user selection
-  Serial.println("Enter number for control option:");
-  Serial.println("1. Turn at default microstep mode.");
-  Serial.println("2. Reverse direction at default microstep mode.");
-  Serial.println("3. Turn at 1/8th microstep mode.");
-  Serial.println("4. Step forward and reverse directions.");
-  Serial.println();
 }
 
 
@@ -47,7 +41,7 @@ void loop() {
   static byte buffer[PACKET_MAX_BYTES];
   int count = 0;
   int packetSize = PACKET_MIN_BYTES;
-
+  interrupts();
   // continuously check for received packets
   while(true)
   {
@@ -90,7 +84,7 @@ void loop() {
       if(count >= packetSize){
         // validate the packet
         if(validatePacket(packetSize, buffer)){
-          if(buffer[2] == 'M'){
+          if(buffer[2] == 'M' && packetSize == 7){
             digitalWrite(led, HIGH);
             delay(1000);
             digitalWrite(led, LOW);
@@ -98,14 +92,18 @@ void loop() {
             digitalWrite(led, HIGH);
             delay(1000);
             digitalWrite(led, LOW);
-            StepForwardDefault();
+            noInterrupts();
+            TurnMotor(buffer[3], buffer[4], buffer[5]);
             sendPacket(packetSize - PACKET_OVERHEAD_BYTES, buffer + 2);
+            interrupts();
           }
-          else{
+          else if(buffer[2] == 'F'){
             digitalWrite(led, HIGH);
             delay(200);
             digitalWrite(led, LOW);
-            sendPacket(packetSize - PACKET_OVERHEAD_BYTES, buffer + 2);  
+            noInterrupts();
+            SendFlow();
+            interrupts();
           }
         }
         // reset the count
@@ -116,84 +114,26 @@ void loop() {
 }
 
 //Default microstep mode function 
-void StepForwardDefault()
+void TurnMotor(char direc, int steps, int multi)
 {
   digitalWrite(EN, LOW);
-  digitalWrite(dir, LOW); //Pull direction pin low to move "forward"
-  digitalWrite(MS1, HIGH);
-  digitalWrite(MS2, HIGH);
-  digitalWrite(MS1, LOW);
-  digitalWrite(MS2, LOW);
-  digitalWrite(RST, HIGH);
-  for(x = 0; x < 200; x++)  //Loop the forward stepping enough times for motion to be visible
-  {
-    digitalWrite(stp,HIGH); //Trigger one step forward
-    delay(1);
-    digitalWrite(stp,LOW); //Pull step pin low so it can be triggered again
-    delay(1);
+  if(direc == 'F'){
+    digitalWrite(dir, LOW); //Pull direction pin low to move "forward"
   }
-}
-
-//Reverse default microstep mode function
-void ReverseStepDefault()
-{
-  Serial.println("Moving in reverse at default step mode.");
-  digitalWrite(dir, HIGH); //Pull direction pin high to move in "reverse"
-  for(x = 0; x < 1000; x++)  //Loop the stepping enough times for motion to be visible
-  {
-    digitalWrite(stp,HIGH); //Trigger one step
-    delay(1);
-    digitalWrite(stp,LOW); //Pull step pin low so it can be triggered again
-    delay(1);
+  else if(direc == 'B'){
+    digitalWrite(dir, HIGH);
   }
-  Serial.println("Enter new option");
-  Serial.println();
-}
-
-// 1/8th microstep foward mode function
-void SmallStepMode()
-{
-  Serial.println("Stepping at 1/8th microstep mode.");
-  digitalWrite(dir, LOW); //Pull direction pin low to move "forward"
-  digitalWrite(MS1, HIGH); //Pull MS1, and MS2 high to set logic to 1/8th microstep resolution
-  digitalWrite(MS2, HIGH);
-  for(x = 0; x < 1000; x++)  //Loop the forward stepping enough times for motion to be visible
+  for(i = 0; i < multi; i++)  //Loop the forward stepping enough times for motion to be visible
   {
-    digitalWrite(stp,HIGH); //Trigger one step forward
-    delay(1);
-    digitalWrite(stp,LOW); //Pull step pin low so it can be triggered again
-    delay(1);
-  }
-  Serial.println("Enter new option");
-  Serial.println();
-}
-
-//Forward/reverse stepping function
-void ForwardBackwardStep()
-{
-  Serial.println("Alternate between stepping forward and reverse.");
-  for(x = 0; x < 5; x++)  //Loop the forward stepping enough times for motion to be visible
-  {
-    //Read direction pin state and change it
-    state=digitalRead(dir);
-    if(state == HIGH)
+    for(j = 0; j < steps; j++)
     {
-      digitalWrite(dir, LOW);
-    }
-    else if(state ==LOW)
-    {
-      digitalWrite(dir,HIGH);
-    }
-    for(y = 0; y < 1000; y++)
-    {
-      digitalWrite(stp,HIGH); //Trigger one step
+      digitalWrite(stp,HIGH); //Trigger one step forward
       delay(1);
       digitalWrite(stp,LOW); //Pull step pin low so it can be triggered again
       delay(1);
     }
   }
-  Serial.println("Enter new option:");
-  Serial.println();
+  resetEDPins();
 }
 
 //Reset Easy Driver pins to default states
@@ -263,3 +203,34 @@ boolean sendPacket(unsigned int payloadSize, byte *payload)
   Serial.flush();
   return true;
 }
+
+boolean SendFlow()
+{
+  // the payload size will stay constant
+  unsigned int packetSize = 2 + PACKET_OVERHEAD_BYTES;
+  // create the serial packet transmit buffer
+  static byte packet[PACKET_MAX_BYTES];
+  // populate the overhead fields
+  packet[0] = PACKET_START_BYTE;
+  packet[1] = packetSize;
+  byte checkSum = packet[0] ^ packet[1];
+  // populate the packet payload while computing the checksum
+  packet[2] = 'F';
+  checkSum = checkSum ^ packet[2];
+  packet[3] = flowCount;
+  packet[4] = checkSum ^ packet[3];
+  // send the packet
+  Serial.write(packet, packetSize);
+  Serial.flush();
+  flowCount = 0;
+  return true;
+}
+
+void CountFlow()
+{
+  digitalWrite(led, HIGH);
+  delayMicroseconds(50000);
+  digitalWrite(led, LOW);
+  flowCount++;
+}
+
