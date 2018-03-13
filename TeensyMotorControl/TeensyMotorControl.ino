@@ -29,7 +29,7 @@ void setup() {
   pinMode(MS2, OUTPUT);
   pinMode(EN, OUTPUT);
   pinMode(led, OUTPUT);
-  pinMode(FLO, INPUT);
+  pinMode(FLO, INPUT_PULLUP);
   attachInterrupt(digitalPinToInterrupt(FLO), CountFlow, RISING);
   resetEDPins(); //Set step, direction, microstep and enable pins to default states
   Serial.begin(9600); //Open Serial connection for debugging

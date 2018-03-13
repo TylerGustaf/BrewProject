@@ -14,21 +14,17 @@ stdlib.h
 iostream
 -
 
-/home/pi/Desktop/BrewProject/GUI_for_Motor/src/main.cpp
-global.h
-/home/pi/Desktop/BrewProject/GUI_for_Motor/src/global.h
-string.h
-/home/pi/Desktop/BrewProject/GUI_for_Motor/src/string.h
-sys/types.h
--
-sys/stat.h
--
-fcntl.h
+/home/pi/Desktop/BrewProject/GUI_for_Motor/src/serialreadthread.cpp
+glib.h
 -
 unistd.h
 -
-termios.h
+string.h
 -
+errno.h
+-
+global.h
+/home/pi/Desktop/BrewProject/GUI_for_Motor/src/global.h
 
 /usr/include/atk-1.0/atk/atk-enum-types.h
 atk/atkversion.h

@@ -24,7 +24,7 @@ bool validatePacket(unsigned int packetSize, unsigned char *packet);
  * potentiometer bytes into a single value and calculates the voltage then sets it to a variable for printing
  */
 gpointer Serial_Read_Thread()
-{
+{/*
     ssize_t r_res;
     char ob[50];					//Holds the bytes of the package sent by the Teensy
     unsigned int count=0;		// Counts how many bytes of the current package have been recieved
@@ -98,13 +98,14 @@ gpointer Serial_Read_Thread()
         else
             usleep(READ_THREAD_SLEEP_DURATION_US);
     }
-    return NULL;
+    return NULL;*/
 }
 /*!
  * \brief Validates the packet recieved from the Teensy
  * \param packetSize is the size of the packet, packet is a pointer to the packet itself
  * \details Checks every byte of the packet and validates the checksum at the end
  */
+/*
 bool validatePacket(unsigned int packetSize, unsigned char *packet)
 {
     //check the packet size      
@@ -130,4 +131,4 @@ bool validatePacket(unsigned int packetSize, unsigned char *packet)
     }
     // all validation checks passed, the packet is valid
     return true;
-}
+}*/
