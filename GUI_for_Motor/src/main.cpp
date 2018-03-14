@@ -24,6 +24,7 @@
 #include <termios.h>
 #include <glib.h>
 #include <errno.h>
+#include <ctime>
 
 #define VOLTAGE_DISPLAY_UPDATE_MS 100	//!< Time(in milliseconds) between calls to voltage display function
 #define READ_THREAD_SLEEP_DURATION_US 100000	//!< Duration to sleep while waiting for input
@@ -62,8 +63,10 @@ const unsigned int PACKET_OVERHEAD_BYTES = 3;
 const unsigned int PACKET_MIN_BYTES = PACKET_OVERHEAD_BYTES + 1;
 const unsigned int PACKET_MAX_BYTES = 255;
 
-void CommandMotor();
+void TurnMotor(char, int, int);
 void RequestFlow();
+int GetSerialPacket();
+double GetFlow(clock_t);
 
 //********************************************************************
 // GUI handlers
@@ -146,10 +149,10 @@ extern "C" void button_send_clicked(GtkWidget *p_wdgt, gpointer p_data )
   text_teensycommand = gtk_entry_get_text(GTK_ENTRY(gui_app->teensycommand));
 
   if(text_teensycommand[0] == 'M'){
-      CommandMotor();
+      TurnMotor('M', 0, 0);
   }
   else if(text_teensycommand[0] == 'F'){
-      RequestFlow();
+      GetFlow(0);
   }
   else{
       //setting text on label
@@ -157,7 +160,26 @@ extern "C" void button_send_clicked(GtkWidget *p_wdgt, gpointer p_data )
   }      
 }
 
-void CommandMotor()
+void MasterLogic()
+{
+    clock_t startTime;
+    char direction;
+    int steps, multi;
+    double flowRate;
+    double targetFlow;
+    startTime = clock();
+    while(!kill_all_threads){
+        flowRate = GetFlow(startTime);
+        startTime = clock();
+        if(flowRate != targetFlow){
+            TurnMotor(direction, steps, multi);
+        }
+        usleep(1000000); //sleep for 1 second
+    }
+
+}
+
+void TurnMotor(char dir, int steps, int multi)
 {
     char label_sent_value[40];			//Character array to hold the string that will be printed to the label_sent field
     int length_send_buff = 7;				//Length of the package to be sent to the Teensy
@@ -191,6 +213,17 @@ void CommandMotor()
     gtk_label_set_text(GTK_LABEL(gui_app->label_sent),label_sent_value);
 }
 
+double GetFlow(clock_t startTime)
+{
+    clock_t endTime;
+    double flowRate;
+    RequestFlow();
+    flowRate = GetSerialPacket();
+    endTime = clock();
+    flowRate = (flowRate * 2.50) / ((endTime - startTime) / CLOCKS_PER_SEC);
+    return flowRate;
+}
+
 void RequestFlow()
 {
     char label_sent_value[40];			//Character array to hold the string that will be printed to the label_sent field
@@ -209,7 +242,6 @@ void RequestFlow()
     sprintf(label_sent_value,"%x %x %c %x",PACKET_START_BYTE,length_send_buff, FLOW_COMMAND, send_buff[3]);
     //setting text on label
     gtk_label_set_text(GTK_LABEL(gui_app->label_sent),label_sent_value);
-
 }
 
 bool validatePacket(unsigned int packetSize, unsigned char *packet)
@@ -239,7 +271,7 @@ bool validatePacket(unsigned int packetSize, unsigned char *packet)
     return true;
 }
 
-void GetSerialPacket()
+int GetSerialPacket()
 {
     ssize_t r_res;
     char ob[50];					//Holds the bytes of the package sent by the Teensy
@@ -294,17 +326,20 @@ void GetSerialPacket()
                 if(count >= packetSize){
                     if(validatePacket(packetSize, buffer)){  //If the packet is valid,
                         //Use the data from the packet
-                        g_mutex_lock(mutex_to_protect_voltage_display);
+                        //g_mutex_lock(mutex_to_protect_voltage_display);
                         if(buffer[2] == 'M'){
                             sprintf(label_recieved_value,"%s %d %s %d %s", "Motor Turned", (int)buffer[4],"Steps",(int)buffer[5],"Times");
+                            return 1;
                         }
                         else if(buffer[2] == 'F'){
                             sprintf(label_recieved_value,"%s %d", "Flow is:", (int)buffer[3]);
+                            return buffer[3];
                         }
-                        else if(buffer[2] == 'F'){
+                        else{
                             sprintf(label_recieved_value,"%s", "Unrecognized Packet");
+                            return 0;
                         }
-                        g_mutex_unlock(mutex_to_protect_voltage_display);
+                        //g_mutex_unlock(mutex_to_protect_voltage_display);
                     }
                     //reset the count
                     count = 0;
@@ -343,7 +378,7 @@ int main(int argc, char **argv)
   GtkBuilder *builder;
   GError *err = NULL;
 
-  GThread *read_thread;
+  //GThread *read_thread;
 
   //this is how you allocate a Glib mutex
   g_assert(mutex_to_protect_voltage_display == NULL);
@@ -354,7 +389,7 @@ int main(int argc, char **argv)
   kill_all_threads=false;
   
   //spawn the serial read thread
-  read_thread = g_thread_new(NULL,(GThreadFunc)Serial_Read_Thread,NULL);
+  //read_thread = g_thread_new(NULL,(GThreadFunc)Serial_Read_Thread,NULL);
   
   // Now we initialize GTK+ 
   gtk_init(&argc, &argv);
@@ -394,7 +429,7 @@ int main(int argc, char **argv)
 
   //signal all threads to die and wait for them (only one child thread)
   kill_all_threads=true;
-  g_thread_join(read_thread);
+  //g_thread_join(read_thread);
   
   //destroy gui if it still exists
   if(gui_app)
