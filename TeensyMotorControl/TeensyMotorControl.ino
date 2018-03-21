@@ -133,6 +133,7 @@ void TurnMotor(char direc, int steps, int multi)
       delay(1);
     }
   }
+  flowCount = 0;
   resetEDPins();
 }
 
