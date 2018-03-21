@@ -14,7 +14,7 @@ int y;
 int i,j;
 int state;
 volatile int flowCount = 0;
-
+ 
 // define packet parameters
 const byte PACKET_START_BYTE = 0xAA;
 const unsigned int PACKET_OVERHEAD_BYTES = 3;
@@ -29,7 +29,7 @@ void setup() {
   pinMode(MS2, OUTPUT);
   pinMode(EN, OUTPUT);
   pinMode(led, OUTPUT);
-  pinMode(FLO, INPUT_PULLUP);
+  pinMode(FLO, INPUT);
   attachInterrupt(digitalPinToInterrupt(FLO), CountFlow, RISING);
   resetEDPins(); //Set step, direction, microstep and enable pins to default states
   Serial.begin(9600); //Open Serial connection for debugging

@@ -63,10 +63,9 @@ const unsigned int PACKET_OVERHEAD_BYTES = 3;
 const unsigned int PACKET_MIN_BYTES = PACKET_OVERHEAD_BYTES + 1;
 const unsigned int PACKET_MAX_BYTES = 255;
 
-void TurnMotor(char, int, int);
-void RequestFlow();
-int GetSerialPacket();
+bool TurnMotor(char, int, int);
 double GetFlow(clock_t);
+int GetSerialPacket();
 
 //********************************************************************
 // GUI handlers
@@ -149,10 +148,16 @@ extern "C" void button_send_clicked(GtkWidget *p_wdgt, gpointer p_data )
   text_teensycommand = gtk_entry_get_text(GTK_ENTRY(gui_app->teensycommand));
 
   if(text_teensycommand[0] == 'M'){
-      TurnMotor('M', 0, 0);
+      const char *stepnum_string = gtk_entry_get_text(GTK_ENTRY(gui_app->stepnum));
+      unsigned char numOfSteps = atoi(stepnum_string);
+      const char *stepmulti_string = gtk_entry_get_text(GTK_ENTRY(gui_app->stepmulti));
+      unsigned char stepMultiplier = atoi(stepmulti_string);
+      const char *motordir_string = gtk_entry_get_text(GTK_ENTRY(gui_app->motordir));
+      unsigned char motorDirection = motordir_string[0];
+      TurnMotor(motorDirection, numOfSteps, stepMultiplier);
   }
   else if(text_teensycommand[0] == 'F'){
-      GetFlow(0);
+      GetFlow(0); 
   }
   else{
       //setting text on label
@@ -179,18 +184,13 @@ void MasterLogic()
 
 }
 
-void TurnMotor(char dir, int steps, int multi)
+bool TurnMotor(char motorDirection, int numOfSteps, int stepMultiplier)
 {
-    char label_sent_value[40];			//Character array to hold the string that will be printed to the label_sent field
+    if(!(motorDirection == 'F' || motorDirection == 'B')){
+        return false;
+    }
     int length_send_buff = 7;				//Length of the package to be sent to the Teensy
     char send_buff[length_send_buff];		//Character array to hold the package that will be sent to the Teensy
-
-    const char *stepnum_string = gtk_entry_get_text(GTK_ENTRY(gui_app->stepnum));
-    unsigned char numOfSteps = atoi(stepnum_string);
-    const char *stepmulti_string = gtk_entry_get_text(GTK_ENTRY(gui_app->stepmulti));
-    unsigned char stepMultiplier = atoi(stepmulti_string);
-    const char *motordir_string = gtk_entry_get_text(GTK_ENTRY(gui_app->motordir));
-    unsigned char motorDirection = motordir_string[0];
 
     //Set up the buffer with the start byte, packet size, command byte, and checksum
     send_buff[0] = PACKET_START_BYTE;
@@ -207,26 +207,23 @@ void TurnMotor(char dir, int steps, int multi)
     //this is how you send an array out on the serial port:
     write(ser_dev, send_buff, length_send_buff);
 
+    if(GetSerialPacket() == 1){
+        return true;
+    }
+    else{
+        return false;
+    }
+
     //Print the same thing as calculated above to the c_cc_value which will be used to send to the txtstring label
-    sprintf(label_sent_value,"%x %x %c %c %d %d %x",PACKET_START_BYTE,length_send_buff, MOTOR_COMMAND,motorDirection, numOfSteps, stepMultiplier, send_buff[6]);
+    //sprintf(label_sent_value,"%x %x %c %c %d %d %x",PACKET_START_BYTE,length_send_buff, MOTOR_COMMAND,motorDirection, numOfSteps, stepMultiplier, send_buff[6]);
     //setting text on label
-    gtk_label_set_text(GTK_LABEL(gui_app->label_sent),label_sent_value);
+    //gtk_label_set_text(GTK_LABEL(gui_app->label_sent),label_sent_value);
 }
 
 double GetFlow(clock_t startTime)
 {
     clock_t endTime;
     double flowRate;
-    RequestFlow();
-    flowRate = GetSerialPacket();
-    endTime = clock();
-    flowRate = (flowRate * 2.50) / ((endTime - startTime) / CLOCKS_PER_SEC);
-    return flowRate;
-}
-
-void RequestFlow()
-{
-    char label_sent_value[40];			//Character array to hold the string that will be printed to the label_sent field
     int length_send_buff = 4;				//Length of the package to be sent to the Teensy
     char send_buff[length_send_buff];		//Character array to hold the package that will be sent to the Teensy
     //Set up the buffer with the start byte, packet size, command byte, and checksum
@@ -238,10 +235,10 @@ void RequestFlow()
     //this is how you send an array out on the serial port:
     write(ser_dev, send_buff, length_send_buff);
 
-    //Print the same thing as calculated above to the c_cc_value which will be used to send to the txtstring label
-    sprintf(label_sent_value,"%x %x %c %x",PACKET_START_BYTE,length_send_buff, FLOW_COMMAND, send_buff[3]);
-    //setting text on label
-    gtk_label_set_text(GTK_LABEL(gui_app->label_sent),label_sent_value);
+    flowRate = GetSerialPacket();
+    //endTime = clock();
+    //flowRate = (flowRate * 2.50) / ((endTime - startTime) / CLOCKS_PER_SEC);
+    return flowRate;
 }
 
 bool validatePacket(unsigned int packetSize, unsigned char *packet)
