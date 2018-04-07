@@ -39,32 +39,26 @@
  */
 void ObtainGuiWidgets(GtkBuilder *p_builder)
 {
-
-  GuiappGET(window1);			//The main window for the GUI
-  GuiappGET(entry_sd);			//The entry field for the serial port
-  GuiappGET(exitbutton);			//The exit button at the bottom of the GUI
-  GuiappGET(opendevice);			//The open device button for the serial port
-  GuiappGET(closedevice);			//The close device button for the serial port
-  GuiappGET(sendbutton);			//The button to send a command to the Teensy
-  GuiappGET(label_recieved);		//The display field for the recieved package
-  GuiappGET(label_sent);			//The display field for the package being sent to the Teensy
-  GuiappGET(teensycommand);		//The entry field for the command to be sent to the Teensy
-  GuiappGET(stepnum);			//The entry field for the number of steps the motor should turn    
-  GuiappGET(stepmulti);			//The entry field for the multiplier for the number of steps
-  GuiappGET(forwardbutton);
-  GuiappGET(backbutton);
-  GuiappGET(motordir);
+  GuiappGET(window1);
+  GuiappGET(exitbutton);
+  GuiappGET(StartButton);
+  GuiappGET(PauseButton);
+  GuiappGET(FOpenButton);
+  GuiappGET(FCloseButton);
+  GuiappGET(TargetFlowInput);
+  GuiappGET(FlowLabel);
 }
 
 const char PACKET_START_BYTE = 0xAA;
 const char MOTOR_COMMAND = 'M';
 const char FLOW_COMMAND = 'F';
+const char TEST_COMMAND = 'T';
 const unsigned int PACKET_OVERHEAD_BYTES = 3;
 const unsigned int PACKET_MIN_BYTES = PACKET_OVERHEAD_BYTES + 1;
 const unsigned int PACKET_MAX_BYTES = 255;
 
 bool TurnMotor(char, int, int);
-double GetFlow(clock_t);
+double GetFlow(time_t);
 int GetSerialPacket();
 
 //********************************************************************
@@ -75,7 +69,7 @@ int GetSerialPacket();
  * \param gpointer is one of the standard callback function parameters allowing it to change the voltage display value
  * \details Locks the mutex protecting the voltage display and sets the voltage label to the calculated voltage value
  * it then unlocks the mutex and returns true.
-*/
+
 gboolean  Voltage_Display_Displayer(gpointer p_gptr)
 {
   //do not change this function
@@ -84,62 +78,14 @@ gboolean  Voltage_Display_Displayer(gpointer p_gptr)
   g_mutex_unlock(mutex_to_protect_voltage_display);
   return true;
 }
-/*!
- * \brief Callback for when the open device button is clicked
- * \param Standard parameters for callback function
- * \details Disables the open device button and enables the close device button. Opens the device from the serial port
- * which has been entered in the entry_sd widget
- */
-extern "C" void button_opendevice_clicked(GtkWidget *p_wdgt, gpointer p_data ) 
-{
-  //do not change  the next few lines
-  //they contain the mambo-jumbo to open a serial port
-  const char *t_device_value;	//Holds the string entered in entry_sd
-  struct termios my_serial;
-  t_device_value = gtk_entry_get_text(GTK_ENTRY(gui_app->entry_sd));
-  //open serial port with read and write, no controling terminal (we don't
-  //want to get killed if serial sends CTRL-C), non-blocking 
-  ser_dev = open(t_device_value, O_RDWR | O_NOCTTY );
-  bzero(&my_serial, sizeof(my_serial)); // clear struct for new port settings 
-  //B9600: set baud rate to 9600
-  //   CS8     : 8n1 (8bit,no parity,1 stopbit)
-  //   CLOCAL  : local connection, no modem contol
-  //   CREAD   : enable receiving characters  */
-  my_serial.c_cflag = B9600 | CS8 | CLOCAL | CREAD; 
-  tcflush(ser_dev, TCIFLUSH);
-  tcsetattr(ser_dev,TCSANOW,&my_serial);
-  //You can add code beyond this line but do not change anything above this line
-
-  //this is how you disable a button:
-  gtk_widget_set_sensitive (gui_app->opendevice,FALSE);
-  //this is how you enable a button:
-  gtk_widget_set_sensitive (gui_app->closedevice,TRUE);  
-}
-
-/*!
- * \brief Callback for when the close device button is clicked
- * \param Standard parameters for callback function
- * \details Disables the close device button and enables the open device button.Closes the serial port
- * which has been opened by the open device callback
- */
-extern "C" void button_closedevice_clicked(GtkWidget *p_wdgt, gpointer p_data ) 
-{
-  //this is how you disable a button:
-  gtk_widget_set_sensitive (gui_app->closedevice,FALSE);
-  //this is how you enable a button:
-  gtk_widget_set_sensitive (gui_app->opendevice,TRUE);
-  //do not change the next two lines; they close the serial port
-  close(ser_dev);
-  ser_dev=-1;
-}
-
+*/
 /*!
  * \brief Callback for when the send button is clicked
  * \param Standard parameters for callback function
  * \details Gets the values from red/blue/green value, sets the red/blue/green sliders to the recieved values,
  * prepairs an appropriate package with recieved values, sends package to the Teensy, and sets the txtstring
  * to the sent package to display it to the user.
- */
+ 
 extern "C" void button_send_clicked(GtkWidget *p_wdgt, gpointer p_data ) 
 {
   const char *text_teensycommand;		//Holds the string entered in the teensycommand text field
@@ -164,22 +110,25 @@ extern "C" void button_send_clicked(GtkWidget *p_wdgt, gpointer p_data )
       gtk_label_set_text(GTK_LABEL(gui_app->label_sent),"Unrecognized Command");
   }      
 }
-
-void MasterLogic()
+*/
+gpointer MasterLogic()
 {
-    clock_t startTime;
+    time_t startTime;
     char direction;
-    int steps, multi;
+    int steps = 0, multi = 0;
     double flowRate;
-    double targetFlow;
-    startTime = clock();
+    startTime = time(0);
     while(!kill_all_threads){
+        usleep(5000000); //sleep for 1 second
         flowRate = GetFlow(startTime);
-        startTime = clock();
-        if(flowRate != targetFlow){
-            TurnMotor(direction, steps, multi);
-        }
-        usleep(1000000); //sleep for 1 second
+        startTime = time(0);
+        sprintf(label_recieved_value,"%.2f", flowRate);
+        gtk_label_set_text(GTK_LABEL(gui_app->FlowLabel), label_recieved_value);
+        //if(flowRate != targetFlow){
+        //  TurnMotor(direction, steps, multi);
+        //   startTime = time(0);
+        //}
+        //usleep(1000000); //sleep for 1 second
     }
 
 }
@@ -205,7 +154,7 @@ bool TurnMotor(char motorDirection, int numOfSteps, int stepMultiplier)
     send_buff[6] = send_buff[6] ^ send_buff[4];
     send_buff[6] = send_buff[6] ^ send_buff[5];    
     //this is how you send an array out on the serial port:
-    write(ser_dev, send_buff, length_send_buff);
+    write(ser_teensy1, send_buff, length_send_buff);
 
     if(GetSerialPacket() == 1){
         return true;
@@ -213,16 +162,11 @@ bool TurnMotor(char motorDirection, int numOfSteps, int stepMultiplier)
     else{
         return false;
     }
-
-    //Print the same thing as calculated above to the c_cc_value which will be used to send to the txtstring label
-    //sprintf(label_sent_value,"%x %x %c %c %d %d %x",PACKET_START_BYTE,length_send_buff, MOTOR_COMMAND,motorDirection, numOfSteps, stepMultiplier, send_buff[6]);
-    //setting text on label
-    //gtk_label_set_text(GTK_LABEL(gui_app->label_sent),label_sent_value);
 }
 
-double GetFlow(clock_t startTime)
+double GetFlow(time_t startTime)
 {
-    clock_t endTime;
+    time_t endTime;
     double flowRate;
     int length_send_buff = 4;				//Length of the package to be sent to the Teensy
     char send_buff[length_send_buff];		//Character array to hold the package that will be sent to the Teensy
@@ -233,12 +177,13 @@ double GetFlow(clock_t startTime)
     send_buff[3] = send_buff[0] ^ send_buff[1];
     send_buff[3] = send_buff[3] ^ send_buff[2];
     //this is how you send an array out on the serial port:
-    write(ser_dev, send_buff, length_send_buff);
+    write(ser_teensy1, send_buff, length_send_buff);
 
     flowRate = GetSerialPacket();
-    //endTime = clock();
+    endTime = time(0);
     //flowRate = (flowRate * 2.50) / ((endTime - startTime) / CLOCKS_PER_SEC);
-    return flowRate;
+    //return flowRate;
+    return (endTime - startTime);
 }
 
 bool validatePacket(unsigned int packetSize, unsigned char *packet)
@@ -275,13 +220,11 @@ int GetSerialPacket()
     unsigned int count=0;		// Counts how many bytes of the current package have been recieved
     static unsigned char buffer[PACKET_MAX_BYTES];	//Holds the full package recieved from the Teensy
     unsigned int packetSize = PACKET_MIN_BYTES;		//Holds the size of the packet recieved from the Teensy
-    double flow_rate;		//Holds the calculated flow rate from the flowmeter
-    //int pulses;			//Holds the number of pulses
 
     //Continuously listen for packets from teensy
-    while(!kill_all_threads){  
-        if(ser_dev!=-1){  
-            r_res = read(ser_dev,ob,1);
+    for(int i = 0; i < 10000 && !kill_all_threads; i++){  
+        if(ser_teensy1!=-1){  
+            r_res = read(ser_teensy1,ob,1);
             if(r_res==0){
                 usleep(BETWEEN_CHARACTERS_TIMEOUT_US);
             }
@@ -325,15 +268,15 @@ int GetSerialPacket()
                         //Use the data from the packet
                         //g_mutex_lock(mutex_to_protect_voltage_display);
                         if(buffer[2] == 'M'){
-                            sprintf(label_recieved_value,"%s %d %s %d %s", "Motor Turned", (int)buffer[4],"Steps",(int)buffer[5],"Times");
                             return 1;
                         }
                         else if(buffer[2] == 'F'){
-                            sprintf(label_recieved_value,"%s %d", "Flow is:", (int)buffer[3]);
                             return buffer[3];
                         }
+                        else if(buffer[2] == 'T'){
+                            return 1007;
+                        }
                         else{
-                            sprintf(label_recieved_value,"%s", "Unrecognized Packet");
                             return 0;
                         }
                         //g_mutex_unlock(mutex_to_protect_voltage_display);
@@ -346,6 +289,36 @@ int GetSerialPacket()
         else
             usleep(READ_THREAD_SLEEP_DURATION_US);
     }
+    return 0;
+}
+
+extern "C" void Start_Button_Clicked(GtkWidget *p_wdgt, gpointer p_data ) 
+{
+  targetFlow = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(gui_app->TargetFlowInput));
+  if(targetFlow > 0){
+    //this is how you disable a button:
+    gtk_widget_set_sensitive (gui_app->StartButton,FALSE);
+    gtk_widget_set_sensitive (gui_app->FCloseButton,FALSE);
+    gtk_widget_set_sensitive (gui_app->FOpenButton,FALSE);
+    //this is how you enable a button:
+    gtk_widget_set_sensitive (gui_app->PauseButton,TRUE);
+
+    // this is used to signal all threads to exit
+    kill_all_threads=false;
+    GThread *master_thread;
+    //spawn the master logic thread
+    master_thread = g_thread_new(NULL,(GThreadFunc)MasterLogic,NULL);
+  }
+
+}
+
+extern "C" void Pause_Button_Clicked(GtkWidget *p_wdgt, gpointer p_data ) 
+{
+  kill_all_threads=true;
+  gtk_widget_set_sensitive (gui_app->StartButton,TRUE);
+  gtk_widget_set_sensitive (gui_app->FCloseButton,TRUE);
+  gtk_widget_set_sensitive (gui_app->FOpenButton,TRUE);
+  gtk_widget_set_sensitive (gui_app->PauseButton,FALSE);
 }
 
 /*!
@@ -355,7 +328,47 @@ int GetSerialPacket()
  */
 extern "C" void button_exit_clicked(GtkWidget *p_wdgt, gpointer p_data ) 
 {
+  kill_all_threads = true;
+  //do not change the next two lines; they close the serial port
+  close(ser_teensy1);
+  ser_teensy1=-1;
   gtk_main_quit();
+}
+
+bool ConnectTeensy()
+{
+  //do not change  the next few lines
+  //they contain the mambo-jumbo to open a serial port
+  const char *teensy_serial_port;	//Holds the string entered in entry_sd
+  struct termios my_serial;
+  teensy_serial_port = "/dev/ttyACM0";
+  //open serial port with read and write, no controling terminal (we don't
+  //want to get killed if serial sends CTRL-C), non-blocking 
+  ser_teensy1 = open(teensy_serial_port, O_RDWR | O_NOCTTY );
+  bzero(&my_serial, sizeof(my_serial)); // clear struct for new port settings 
+  //B9600: set baud rate to 9600
+  //   CS8     : 8n1 (8bit,no parity,1 stopbit)
+  //   CLOCAL  : local connection, no modem contol
+  //   CREAD   : enable receiving characters  */
+  my_serial.c_cflag = B9600 | CS8 | CLOCAL | CREAD; 
+  tcflush(ser_teensy1, TCIFLUSH);
+  tcsetattr(ser_teensy1,TCSANOW,&my_serial);
+  //You can add code beyond this line but do not change anything above this line
+  int length_send_buff = 4;				//Length of the package to be sent to the Teensy
+  char send_buff[length_send_buff];		//Character array to hold the package that will be sent to the Teensy
+  //Set up the buffer with the start byte, packet size, command byte, and checksum
+  send_buff[0] = PACKET_START_BYTE;
+  send_buff[1] = length_send_buff;
+  send_buff[2] = TEST_COMMAND;
+  send_buff[3] = send_buff[0] ^ send_buff[1];
+  send_buff[3] = send_buff[3] ^ send_buff[2];
+  //this is how you send an array out on the serial port:
+  write(ser_teensy1, send_buff, length_send_buff);
+
+  if(GetSerialPacket() == 1007){
+    return true;
+  }
+  return false;
 }
 
 
@@ -419,10 +432,18 @@ int main(int argc, char **argv)
   gtk_widget_show(GTK_WIDGET(gui_app->window1));
 
   //this is going to call the Voltage_Display_Displayer function periodically
-  gdk_threads_add_timeout(VOLTAGE_DISPLAY_UPDATE_MS, Voltage_Display_Displayer, NULL);
+  //gdk_threads_add_timeout(VOLTAGE_DISPLAY_UPDATE_MS, Voltage_Display_Displayer, NULL);
 
-  //the main loop
-  gtk_main();
+  //Try to connect to the Teensy
+  if(ConnectTeensy()){
+    //the main loop
+    gtk_main();
+  }
+  else{
+    close(ser_teensy1);
+    ser_teensy1=-1;
+    gtk_main_quit();
+  }
 
   //signal all threads to die and wait for them (only one child thread)
   kill_all_threads=true;

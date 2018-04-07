@@ -18,29 +18,25 @@ using namespace std;
  */
 typedef struct 
 {
-  GtkWidget *window1; 		//!< The main window for the GUI
-  GtkWidget *entry_sd; 		//!< The entry field for the serial port
-  GtkWidget *exitbutton;		//!< The exit button at the bottom of the GUI
-  GtkWidget *opendevice;		//!< The open device button for the serial port
-  GtkWidget *closedevice;		//!< The close device button for the serial port
-  GtkWidget *sendbutton;		//!< The button to send a command to the Teensy
-  GtkWidget *label_sent;			//!< The display field for the byte package being sent to the Teensy
-  GtkWidget *label_recieved;		//!< The display field for the package recieved from the Teensy
-  GtkWidget *teensycommand;			//!< The entry field for the red color value
-  GtkWidget *stepnum;	
-  GtkWidget *stepmulti;	
-  GtkWidget *forwardbutton;	
-  GtkWidget *backbutton;	
-  GtkWidget *motordir;
+  GtkWidget *window1; 
+  GtkWidget *exitbutton;
+  GtkWidget *StartButton;
+  GtkWidget *PauseButton;
+  GtkWidget *FOpenButton;
+  GtkWidget *FCloseButton;
+  GtkWidget *TargetFlowInput;
+  GtkWidget *FlowLabel;
 } Gui_Window_AppWidgets; 
 
 extern Gui_Window_AppWidgets *gui_app;	//!< Main pointer for all the GUI widgets
 
 //this is the serial devices handle
-extern int ser_dev;		//!< Serial devices handle
+extern int ser_teensy1;		//!< Serial devices handle
 
 //this is to gracefully shut down threads
 extern int kill_all_threads;	//!< Used to gracefully shut down threads
+
+extern int targetFlow;
 
 //this variable is for communicating the voltage value string
 extern char label_recieved_value[40];			//!< Holds the calculated value of the voltage for displaying
@@ -50,5 +46,6 @@ extern GMutex *mutex_to_protect_voltage_display;		//!< Mutex for protecting the 
 
 //prototype of function for serial read thread
 gpointer Serial_Read_Thread();
+gpointer MasterLogic();
 
 #endif

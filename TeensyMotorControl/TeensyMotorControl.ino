@@ -30,7 +30,7 @@ void setup() {
   pinMode(EN, OUTPUT);
   pinMode(led, OUTPUT);
   pinMode(FLO, INPUT);
-  attachInterrupt(digitalPinToInterrupt(FLO), CountFlow, RISING);
+  attachInterrupt(digitalPinToInterrupt(FLO), CountFlow, FALLING);
   resetEDPins(); //Set step, direction, microstep and enable pins to default states
   Serial.begin(9600); //Open Serial connection for debugging
 }
@@ -105,6 +105,14 @@ void loop() {
             SendFlow();
             interrupts();
           }
+          else if(buffer[2] == 'T'){
+            digitalWrite(led, HIGH);
+            delay(1000);
+            digitalWrite(led, LOW);
+            noInterrupts();
+            sendPacket(packetSize - PACKET_OVERHEAD_BYTES, buffer + 2);
+            interrupts();
+          }
         }
         // reset the count
         count = 0; 
@@ -135,6 +143,28 @@ void TurnMotor(char direc, int steps, int multi)
   }
   flowCount = 0;
   resetEDPins();
+}
+
+boolean SendFlow()
+{
+  // the payload size will stay constant
+  unsigned int packetSize = 2 + PACKET_OVERHEAD_BYTES;
+  // create the serial packet transmit buffer
+  static byte packet[PACKET_MAX_BYTES];
+  // populate the overhead fields
+  packet[0] = PACKET_START_BYTE;
+  packet[1] = packetSize;
+  byte checkSum = packet[0] ^ packet[1];
+  // populate the packet payload while computing the checksum
+  packet[2] = 'F';
+  checkSum = checkSum ^ packet[2];
+  packet[3] = flowCount;
+  packet[4] = checkSum ^ packet[3];
+  // send the packet
+  Serial.write(packet, packetSize);
+  Serial.flush();
+  flowCount = 0;
+  return true;
 }
 
 //Reset Easy Driver pins to default states
@@ -202,28 +232,6 @@ boolean sendPacket(unsigned int payloadSize, byte *payload)
   // send the packet
   Serial.write(packet, packetSize);
   Serial.flush();
-  return true;
-}
-
-boolean SendFlow()
-{
-  // the payload size will stay constant
-  unsigned int packetSize = 2 + PACKET_OVERHEAD_BYTES;
-  // create the serial packet transmit buffer
-  static byte packet[PACKET_MAX_BYTES];
-  // populate the overhead fields
-  packet[0] = PACKET_START_BYTE;
-  packet[1] = packetSize;
-  byte checkSum = packet[0] ^ packet[1];
-  // populate the packet payload while computing the checksum
-  packet[2] = 'F';
-  checkSum = checkSum ^ packet[2];
-  packet[3] = flowCount;
-  packet[4] = checkSum ^ packet[3];
-  // send the packet
-  Serial.write(packet, packetSize);
-  Serial.flush();
-  flowCount = 0;
   return true;
 }
 
