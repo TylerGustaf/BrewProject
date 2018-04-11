@@ -1,9 +1,9 @@
 //Declare pin functions for Teensy
-#define stp 8
-#define dir 9
 #define EN  5
 #define MS1 6
 #define MS2 7
+#define stp 8
+#define dir 9
 #define FLO 14
 #define led 13
 
@@ -24,13 +24,13 @@ const unsigned int PACKET_MAX_BYTES = 255;
 void setup() {
   // put your setup code here, to run once:
   pinMode(stp, OUTPUT);
-  pinMode(dir, OUTPUT);
+  pinMode(dir, OUTPUT);               
   pinMode(MS1, OUTPUT);
   pinMode(MS2, OUTPUT);
   pinMode(EN, OUTPUT);
   pinMode(led, OUTPUT);
-  pinMode(FLO, INPUT);
-  attachInterrupt(digitalPinToInterrupt(FLO), CountFlow, FALLING);
+  pinMode(FLO, INPUT_PULLUP);
+  attachInterrupt(digitalPinToInterrupt(FLO), CountFlow, RISING);
   resetEDPins(); //Set step, direction, microstep and enable pins to default states
   Serial.begin(9600); //Open Serial connection for debugging
 }
@@ -85,13 +85,13 @@ void loop() {
         // validate the packet
         if(validatePacket(packetSize, buffer)){
           if(buffer[2] == 'M' && packetSize == 7){
-            digitalWrite(led, HIGH);
-            delay(1000);
-            digitalWrite(led, LOW);
-            delay(500);
-            digitalWrite(led, HIGH);
-            delay(1000);
-            digitalWrite(led, LOW);
+            //digitalWrite(led, HIGH);
+            //delay(1000);
+            //digitalWrite(led, LOW);
+            //delay(500);
+            //digitalWrite(led, HIGH);
+            //delay(1000);
+            //digitalWrite(led, LOW);
             noInterrupts();
             TurnMotor(buffer[3], buffer[4], buffer[5]);
             sendPacket(packetSize - PACKET_OVERHEAD_BYTES, buffer + 2);

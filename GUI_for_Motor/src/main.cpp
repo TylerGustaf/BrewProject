@@ -111,6 +111,17 @@ extern "C" void button_send_clicked(GtkWidget *p_wdgt, gpointer p_data )
   }      
 }
 */
+
+bool FullyOpen()
+{
+    return TurnMotor('B', 200, 10);
+}
+
+bool FullyClose()
+{
+    return TurnMotor('F', 200, 10);
+}
+
 gpointer MasterLogic()
 {
     time_t startTime;
@@ -118,18 +129,26 @@ gpointer MasterLogic()
     int steps = 0, multi = 0;
     double flowRate;
     startTime = time(0);
-    while(!kill_all_threads){
-        usleep(5000000); //sleep for 1 second
+bool forward = true;
+    //while(!kill_all_threads){
+        //usleep(1000000); //sleep for 2 second
         flowRate = GetFlow(startTime);
         startTime = time(0);
         sprintf(label_recieved_value,"%.2f", flowRate);
         gtk_label_set_text(GTK_LABEL(gui_app->FlowLabel), label_recieved_value);
         //if(flowRate != targetFlow){
-        //  TurnMotor(direction, steps, multi);
+        //if(forward){
+          TurnMotor('F', 200, 10);
+          //forward = false;
+       //}
+       //else{
+          //TurnMotor('B', 200, 10);
+          //forward = true;
+       //}
         //   startTime = time(0);
         //}
         //usleep(1000000); //sleep for 1 second
-    }
+    //}
 
 }
 
@@ -181,9 +200,8 @@ double GetFlow(time_t startTime)
 
     flowRate = GetSerialPacket();
     endTime = time(0);
-    //flowRate = (flowRate * 2.50) / ((endTime - startTime) / CLOCKS_PER_SEC);
-    //return flowRate;
-    return (endTime - startTime);
+    //flowRate = (flowRate * 2.50) / (endTime - startTime);
+    return flowRate;
 }
 
 bool validatePacket(unsigned int packetSize, unsigned char *packet)
@@ -433,6 +451,8 @@ int main(int argc, char **argv)
 
   //this is going to call the Voltage_Display_Displayer function periodically
   //gdk_threads_add_timeout(VOLTAGE_DISPLAY_UPDATE_MS, Voltage_Display_Displayer, NULL);
+
+  //TODO: If the Teensy does not connect, exit cleanly.
 
   //Try to connect to the Teensy
   if(ConnectTeensy()){
