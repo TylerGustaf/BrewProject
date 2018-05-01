@@ -138,6 +138,7 @@ Control Panel
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">True</property>
+            <signal name="clicked" handler="FO_Button_Clicked" swapped="no"/>
           </object>
           <packing>
             <property name="left_attach">1</property>
@@ -151,6 +152,7 @@ Control Panel
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">True</property>
+            <signal name="clicked" handler="FC_Button_Clicked" swapped="no"/>
           </object>
           <packing>
             <property name="left_attach">2</property>

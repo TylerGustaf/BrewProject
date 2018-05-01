@@ -35,14 +35,15 @@ extern int ser_teensy1;		//!< Serial devices handle
 
 //this is to gracefully shut down threads
 extern int kill_all_threads;	//!< Used to gracefully shut down threads
-
 extern int targetFlow;
+extern bool makeMLThread;
+extern int numOfSteps;
 
 //this variable is for communicating the voltage value string
 extern char label_recieved_value[40];			//!< Holds the calculated value of the voltage for displaying
 
 //this is the mutex for the above variable
-extern GMutex *mutex_to_protect_voltage_display;		//!< Mutex for protecting the voltage display
+extern GMutex *master_logic_mutex;		//!< Mutex for protecting the voltage display
 
 //prototype of function for serial read thread
 gpointer Serial_Read_Thread();

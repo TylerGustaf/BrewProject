@@ -9,6 +9,8 @@ char label_recieved_value[40];	//!< Holds the calculated value of the voltage fo
 
 int kill_all_threads;		//!< Used to gracefully shut down threads
 int targetFlow;
+bool makeMLThread = true;
+int numOfSteps = 0;
 
-GMutex *mutex_to_protect_voltage_display;	//!< Mutex for protecting the voltage display
+GMutex *master_logic_mutex;	//!< Mutex for protecting the voltage display
 

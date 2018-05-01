@@ -98,9 +98,9 @@ void loop() {
             interrupts();
           }
           else if(buffer[2] == 'F'){
-            digitalWrite(led, HIGH);
-            delay(200);
-            digitalWrite(led, LOW);
+            //digitalWrite(led, HIGH);
+            //delay(200);
+            //digitalWrite(led, LOW);
             noInterrupts();
             SendFlow();
             interrupts();
@@ -237,9 +237,9 @@ boolean sendPacket(unsigned int payloadSize, byte *payload)
 
 void CountFlow()
 {
-  digitalWrite(led, HIGH);
-  delayMicroseconds(50000);
-  digitalWrite(led, LOW);
+  //digitalWrite(led, HIGH);
+  //delayMicroseconds(50000);
+  //digitalWrite(led, LOW);
   flowCount++;
 }
 
