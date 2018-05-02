@@ -13,4 +13,4 @@ bool makeMLThread = true;
 int numOfSteps = 0;
 
 GMutex *master_logic_mutex;	//!< Mutex for protecting the voltage display
-
+GMutex *flow_label_mutex;

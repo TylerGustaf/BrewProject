@@ -44,7 +44,7 @@ extern char label_recieved_value[40];			//!< Holds the calculated value of the v
 
 //this is the mutex for the above variable
 extern GMutex *master_logic_mutex;		//!< Mutex for protecting the voltage display
-
+extern GMutex *flow_label_mutex;
 //prototype of function for serial read thread
 gpointer Serial_Read_Thread();
 gpointer MasterLogic();

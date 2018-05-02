@@ -26,7 +26,7 @@
 #include <errno.h>
 #include <ctime>
 
-#define VOLTAGE_DISPLAY_UPDATE_MS 100	//!< Time(in milliseconds) between calls to voltage display function
+#define FLOW_LABEL_UPDATE_MS 100	//!< Time(in milliseconds) between calls to voltage display function
 #define READ_THREAD_SLEEP_DURATION_US 100000	//!< Duration to sleep while waiting for input
 #define BETWEEN_CHARACTERS_TIMEOUT_US 1000		//!< Timeout time between character input
 
@@ -61,6 +61,15 @@ const int MAX_NUM_OF_STEPS = 2000;
 bool TurnMotor(char, int, int);
 double GetFlow(time_t);
 int GetSerialPacket();
+
+gboolean  UpdateFlowLabel(gpointer p_gptr)
+{
+  // do not change this function
+  g_mutex_lock(flow_label_mutex);
+  gtk_label_set_text(GTK_LABEL(gui_app->FlowLabel),label_recieved_value);
+  g_mutex_unlock(flow_label_mutex);
+  return true;
+}
 
 
 bool FullyOpen()
@@ -104,9 +113,11 @@ gpointer MasterLogic()
     while(!kill_all_threads){
         flowRate = GetFlow(startTime);
         startTime = time(0);
-        sprintf(label_recieved_value,"%.2f", flowRate);
-        gtk_label_set_text(GTK_LABEL(gui_app->FlowLabel), label_recieved_value);
 
+        g_mutex_lock(flow_label_mutex);
+        sprintf(label_recieved_value,"%.2f", flowRate);
+        g_mutex_unlock(flow_label_mutex);
+/*
         //Handle Large Error
         if(flowRate < (targetFlow - largeError)){
             steps = 225;
@@ -154,7 +165,7 @@ gpointer MasterLogic()
   printf("Closing Medium Error\n");
         }
         //Handle Small Error
-        else if(flowRate < (targetFlow - smallError)){
+        else*/ if(flowRate < (targetFlow - smallError)){
             steps = 200;
             multi = 1;
             if((numOfSteps+(steps*multi)) > MAX_NUM_OF_STEPS){
@@ -176,7 +187,7 @@ gpointer MasterLogic()
             numOfSteps -= (steps*multi);
   printf("Closing Small Error\n");
         }
-        usleep(3000000); //sleep for 3 second
+        usleep(1000000); //sleep for 1 second
 /*
         if(forward){
           TurnMotor('F', 200, 1);
@@ -239,6 +250,9 @@ double GetFlow(time_t startTime)
 
     flowRate = GetSerialPacket();
     endTime = time(0);
+    if((endTime - startTime) == 0){
+        return 0.0;
+    }
     flowRate = (flowRate * 6.50) / (endTime - startTime);
     return flowRate;
 }
@@ -461,13 +475,16 @@ int main(int argc, char **argv)
 {
   GtkBuilder *builder;
   GError *err = NULL;
-
+        sprintf(label_recieved_value,"%.2f", 0.00);
   //GThread *read_thread;
 
   //this is how you allocate a Glib mutex
   g_assert(master_logic_mutex == NULL);
   master_logic_mutex = new GMutex;
   g_mutex_init(master_logic_mutex);
+  g_assert(flow_label_mutex == NULL);
+  flow_label_mutex = new GMutex;
+  g_mutex_init(flow_label_mutex);
 
   // this is used to signal all threads to exit
   kill_all_threads=false;
@@ -505,8 +522,8 @@ int main(int argc, char **argv)
   //display the gui
   gtk_widget_show(GTK_WIDGET(gui_app->window1));
 
-  //this is going to call the Voltage_Display_Displayer function periodically
-  //gdk_threads_add_timeout(VOLTAGE_DISPLAY_UPDATE_MS, Voltage_Display_Displayer, NULL);
+  //this is going to call the UpdateFlowLabel function periodically
+  gdk_threads_add_timeout(FLOW_LABEL_UPDATE_MS, UpdateFlowLabel, NULL);
 
   //TODO: If the Teensy does not connect, exit cleanly.
 
