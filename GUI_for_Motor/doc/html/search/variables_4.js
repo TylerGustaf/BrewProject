@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['kill_5fall_5fthreads',['kill_all_threads',['../global_8cpp.html#a1de67c525c7e2f7d0790eaec6f518ff2',1,'kill_all_threads():&#160;global.cpp'],['../global_8h.html#a1de67c525c7e2f7d0790eaec6f518ff2',1,'kill_all_threads():&#160;global.cpp']]]
+  ['label_5frecieved_5fvalue',['label_recieved_value',['../global_8cpp.html#a9baf0a2c0bf3cd36ad0e995375660e2f',1,'label_recieved_value():&#160;global.cpp'],['../global_8h.html#a9baf0a2c0bf3cd36ad0e995375660e2f',1,'label_recieved_value():&#160;global.cpp']]]
 ];

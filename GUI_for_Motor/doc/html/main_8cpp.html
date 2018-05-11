@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.8"/>
-<title>TeensyControl: /home/pi/cse2100/GUI_Teensy/LED_Controller/src/main.cpp File Reference</title>
+<title>Pi-Flow: /home/pi/Desktop/BrewProject/GUI_for_Motor/src/main.cpp File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -22,7 +22,7 @@
  <tbody>
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
-   <div id="projectname">TeensyControl
+   <div id="projectname">Pi-Flow
    </div>
   </td>
  </tr>
@@ -86,7 +86,8 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="header">
   <div class="summary">
 <a href="#define-members">Macros</a> &#124;
-<a href="#func-members">Functions</a>  </div>
+<a href="#func-members">Functions</a> &#124;
+<a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
 <div class="title">main.cpp File Reference</div>  </div>
 </div><!--header-->
@@ -98,19 +99,28 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <code>#include &lt;fcntl.h&gt;</code><br />
 <code>#include &lt;unistd.h&gt;</code><br />
 <code>#include &lt;termios.h&gt;</code><br />
+<code>#include &lt;glib.h&gt;</code><br />
+<code>#include &lt;errno.h&gt;</code><br />
+<code>#include &lt;ctime&gt;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for main.cpp:</div>
 <div class="dyncontent">
-<div class="center"><img src="main_8cpp__incl.png" border="0" usemap="#_2home_2pi_2cse2100_2GUI__Teensy_2LED__Controller_2src_2main_8cpp" alt=""/></div>
-<map name="_2home_2pi_2cse2100_2GUI__Teensy_2LED__Controller_2src_2main_8cpp" id="_2home_2pi_2cse2100_2GUI__Teensy_2LED__Controller_2src_2main_8cpp">
+<div class="center"><img src="main_8cpp__incl.png" border="0" usemap="#_2home_2pi_2Desktop_2BrewProject_2GUI__for__Motor_2src_2main_8cpp" alt=""/></div>
+<map name="_2home_2pi_2Desktop_2BrewProject_2GUI__for__Motor_2src_2main_8cpp" id="_2home_2pi_2Desktop_2BrewProject_2GUI__for__Motor_2src_2main_8cpp">
 </map>
 </div>
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
 Macros</h2></td></tr>
-<tr class="memitem:a736aeda0653ee56f9d9a4fd12b45166e"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8cpp.html#a736aeda0653ee56f9d9a4fd12b45166e">VOLTAGE_DISPLAY_UPDATE_MS</a>&#160;&#160;&#160;100</td></tr>
-<tr class="memdesc:a736aeda0653ee56f9d9a4fd12b45166e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Time(in milliseconds) between calls to voltage display function.  <a href="#a736aeda0653ee56f9d9a4fd12b45166e">More...</a><br /></td></tr>
-<tr class="separator:a736aeda0653ee56f9d9a4fd12b45166e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aab055a3201db4a4140afb8d351ed7789"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8cpp.html#aab055a3201db4a4140afb8d351ed7789">FLOW_LABEL_UPDATE_MS</a>&#160;&#160;&#160;100</td></tr>
+<tr class="memdesc:aab055a3201db4a4140afb8d351ed7789"><td class="mdescLeft">&#160;</td><td class="mdescRight">Time(in milliseconds) between calling the UpdateFlowLabel function.  <a href="#aab055a3201db4a4140afb8d351ed7789">More...</a><br /></td></tr>
+<tr class="separator:aab055a3201db4a4140afb8d351ed7789"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac5177a3a187eb070f0c975ca93a59f93"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8cpp.html#ac5177a3a187eb070f0c975ca93a59f93">READ_THREAD_SLEEP_DURATION_US</a>&#160;&#160;&#160;100000</td></tr>
+<tr class="memdesc:ac5177a3a187eb070f0c975ca93a59f93"><td class="mdescLeft">&#160;</td><td class="mdescRight">Duration to sleep while waiting for input.  <a href="#ac5177a3a187eb070f0c975ca93a59f93">More...</a><br /></td></tr>
+<tr class="separator:ac5177a3a187eb070f0c975ca93a59f93"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac2a19dd2750d93ef3e98be522ff6279f"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8cpp.html#ac2a19dd2750d93ef3e98be522ff6279f">BETWEEN_CHARACTERS_TIMEOUT_US</a>&#160;&#160;&#160;1000</td></tr>
+<tr class="memdesc:ac2a19dd2750d93ef3e98be522ff6279f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Timeout time between character input.  <a href="#ac2a19dd2750d93ef3e98be522ff6279f">More...</a><br /></td></tr>
+<tr class="separator:ac2a19dd2750d93ef3e98be522ff6279f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7ffcc27689dcff0f1f551da88cfd56bd"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8cpp.html#a7ffcc27689dcff0f1f551da88cfd56bd">GuiappGET</a>(xx)&#160;&#160;&#160;<a class="el" href="global_8h.html#afe8961a6c8e9609c342b33cf8012c320">gui_app</a>-&gt;xx=GTK_WIDGET(gtk_builder_get_object(p_builder,#xx))</td></tr>
 <tr class="memdesc:a7ffcc27689dcff0f1f551da88cfd56bd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines an easier way to access a widget.  <a href="#a7ffcc27689dcff0f1f551da88cfd56bd">More...</a><br /></td></tr>
 <tr class="separator:a7ffcc27689dcff0f1f551da88cfd56bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -120,29 +130,99 @@ Functions</h2></td></tr>
 <tr class="memitem:a42831ac9db9027fad5a908cf6945ba5d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8cpp.html#a42831ac9db9027fad5a908cf6945ba5d">ObtainGuiWidgets</a> (GtkBuilder *p_builder)</td></tr>
 <tr class="memdesc:a42831ac9db9027fad5a908cf6945ba5d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Connects the widget pointers to the glade widgets.  <a href="#a42831ac9db9027fad5a908cf6945ba5d">More...</a><br /></td></tr>
 <tr class="separator:a42831ac9db9027fad5a908cf6945ba5d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa6b3686a173a9e36b19c9e581c3126c9"><td class="memItemLeft" align="right" valign="top">gboolean&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8cpp.html#aa6b3686a173a9e36b19c9e581c3126c9">Voltage_Display_Displayer</a> (gpointer p_gptr)</td></tr>
-<tr class="memdesc:aa6b3686a173a9e36b19c9e581c3126c9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Prints the Voltage value to the display field for the voltage.  <a href="#aa6b3686a173a9e36b19c9e581c3126c9">More...</a><br /></td></tr>
-<tr class="separator:aa6b3686a173a9e36b19c9e581c3126c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6476bac2120be7b53beae69b27b392bc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8cpp.html#a6476bac2120be7b53beae69b27b392bc">button_opendevice_clicked</a> (GtkWidget *p_wdgt, gpointer p_data)</td></tr>
-<tr class="memdesc:a6476bac2120be7b53beae69b27b392bc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Callback for when the open device button is clicked.  <a href="#a6476bac2120be7b53beae69b27b392bc">More...</a><br /></td></tr>
-<tr class="separator:a6476bac2120be7b53beae69b27b392bc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad3cf8a83b5ee3d3d19ed77fe61a7497d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8cpp.html#ad3cf8a83b5ee3d3d19ed77fe61a7497d">button_closedevice_clicked</a> (GtkWidget *p_wdgt, gpointer p_data)</td></tr>
-<tr class="memdesc:ad3cf8a83b5ee3d3d19ed77fe61a7497d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Callback for when the close device button is clicked.  <a href="#ad3cf8a83b5ee3d3d19ed77fe61a7497d">More...</a><br /></td></tr>
-<tr class="separator:ad3cf8a83b5ee3d3d19ed77fe61a7497d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aea199709c0a72e65d41b5e2cb32e65de"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8cpp.html#aea199709c0a72e65d41b5e2cb32e65de">button_send_clicked</a> (GtkWidget *p_wdgt, gpointer p_data)</td></tr>
-<tr class="memdesc:aea199709c0a72e65d41b5e2cb32e65de"><td class="mdescLeft">&#160;</td><td class="mdescRight">Callback for when the send button is clicked.  <a href="#aea199709c0a72e65d41b5e2cb32e65de">More...</a><br /></td></tr>
-<tr class="separator:aea199709c0a72e65d41b5e2cb32e65de"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af74b39416a3b41e57319f7f474652e0d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8cpp.html#af74b39416a3b41e57319f7f474652e0d">scale_rgb_value_changed</a> (GtkWidget *p_wdgt, gpointer p_data)</td></tr>
-<tr class="memdesc:af74b39416a3b41e57319f7f474652e0d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Callback for when any of the sliders are changed.  <a href="#af74b39416a3b41e57319f7f474652e0d">More...</a><br /></td></tr>
-<tr class="separator:af74b39416a3b41e57319f7f474652e0d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a04eb29c3961a5a65537a7888e6ac8a0e"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8cpp.html#a04eb29c3961a5a65537a7888e6ac8a0e">TurnMotor</a> (char motorDirection, int <a class="el" href="global_8h.html#a2d06a4957c25ea034af11336ae6c2057">numOfSteps</a>, int stepMultiplier)</td></tr>
+<tr class="memdesc:a04eb29c3961a5a65537a7888e6ac8a0e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sends a message to the Teensy to turn the motor.  <a href="#a04eb29c3961a5a65537a7888e6ac8a0e">More...</a><br /></td></tr>
+<tr class="separator:a04eb29c3961a5a65537a7888e6ac8a0e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2a04cdc410897b3b3237efb843492820"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8cpp.html#a2a04cdc410897b3b3237efb843492820">GetFlow</a> (time_t startTime)</td></tr>
+<tr class="memdesc:a2a04cdc410897b3b3237efb843492820"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculates the current flow through the valve.  <a href="#a2a04cdc410897b3b3237efb843492820">More...</a><br /></td></tr>
+<tr class="separator:a2a04cdc410897b3b3237efb843492820"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaadaced0bd0e7966a54cb7a2163236ce"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8cpp.html#aaadaced0bd0e7966a54cb7a2163236ce">GetSerialPacket</a> ()</td></tr>
+<tr class="memdesc:aaadaced0bd0e7966a54cb7a2163236ce"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function that recieves a packet from the Teensy.  <a href="#aaadaced0bd0e7966a54cb7a2163236ce">More...</a><br /></td></tr>
+<tr class="separator:aaadaced0bd0e7966a54cb7a2163236ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abefe694e42353d877275fba421196e5d"><td class="memItemLeft" align="right" valign="top">gboolean&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8cpp.html#abefe694e42353d877275fba421196e5d">UpdateFlowLabel</a> (gpointer p_gptr)</td></tr>
+<tr class="memdesc:abefe694e42353d877275fba421196e5d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Updates the current flow that is displayed to the user.  <a href="#abefe694e42353d877275fba421196e5d">More...</a><br /></td></tr>
+<tr class="separator:abefe694e42353d877275fba421196e5d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6859d31b028a8ee76e4b468e0bea56e0"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8cpp.html#a6859d31b028a8ee76e4b468e0bea56e0">FullyOpen</a> ()</td></tr>
+<tr class="memdesc:a6859d31b028a8ee76e4b468e0bea56e0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fully opens the valve from wherever it is.  <a href="#a6859d31b028a8ee76e4b468e0bea56e0">More...</a><br /></td></tr>
+<tr class="separator:a6859d31b028a8ee76e4b468e0bea56e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a81bf317a136e44ea7af01a327e4c078b"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8cpp.html#a81bf317a136e44ea7af01a327e4c078b">FullyClose</a> ()</td></tr>
+<tr class="memdesc:a81bf317a136e44ea7af01a327e4c078b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fully closes the valve from wherever it is.  <a href="#a81bf317a136e44ea7af01a327e4c078b">More...</a><br /></td></tr>
+<tr class="separator:a81bf317a136e44ea7af01a327e4c078b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a26af4e2465c068934ecf3998bd74c816"><td class="memItemLeft" align="right" valign="top">gpointer&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8cpp.html#a26af4e2465c068934ecf3998bd74c816">MasterLogic</a> ()</td></tr>
+<tr class="memdesc:a26af4e2465c068934ecf3998bd74c816"><td class="mdescLeft">&#160;</td><td class="mdescRight">Controls the valve based on the current flow from the flow sensor.  <a href="#a26af4e2465c068934ecf3998bd74c816">More...</a><br /></td></tr>
+<tr class="separator:a26af4e2465c068934ecf3998bd74c816"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7a0e5c97210cd21235162f697f3992b7"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8cpp.html#a7a0e5c97210cd21235162f697f3992b7">validatePacket</a> (unsigned int packetSize, unsigned char *packet)</td></tr>
+<tr class="memdesc:a7a0e5c97210cd21235162f697f3992b7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Validates a packet.  <a href="#a7a0e5c97210cd21235162f697f3992b7">More...</a><br /></td></tr>
+<tr class="separator:a7a0e5c97210cd21235162f697f3992b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad7fda7948458cf97a5955465f47eb385"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8cpp.html#ad7fda7948458cf97a5955465f47eb385">FO_Button_Clicked</a> (GtkWidget *p_wdgt, gpointer p_data)</td></tr>
+<tr class="memdesc:ad7fda7948458cf97a5955465f47eb385"><td class="mdescLeft">&#160;</td><td class="mdescRight">Callback for when the FullyClose button is clicked.  <a href="#ad7fda7948458cf97a5955465f47eb385">More...</a><br /></td></tr>
+<tr class="separator:ad7fda7948458cf97a5955465f47eb385"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a451d1a8fa0a0af9df207d0efd8c53a13"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8cpp.html#a451d1a8fa0a0af9df207d0efd8c53a13">FC_Button_Clicked</a> (GtkWidget *p_wdgt, gpointer p_data)</td></tr>
+<tr class="memdesc:a451d1a8fa0a0af9df207d0efd8c53a13"><td class="mdescLeft">&#160;</td><td class="mdescRight">Callback for when the FullyClose button is clicked.  <a href="#a451d1a8fa0a0af9df207d0efd8c53a13">More...</a><br /></td></tr>
+<tr class="separator:a451d1a8fa0a0af9df207d0efd8c53a13"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a61894ac0e560e66b3a268cf6b64ce95d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8cpp.html#a61894ac0e560e66b3a268cf6b64ce95d">Start_Button_Clicked</a> (GtkWidget *p_wdgt, gpointer p_data)</td></tr>
+<tr class="memdesc:a61894ac0e560e66b3a268cf6b64ce95d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Callback for when the Start button is clicked.  <a href="#a61894ac0e560e66b3a268cf6b64ce95d">More...</a><br /></td></tr>
+<tr class="separator:a61894ac0e560e66b3a268cf6b64ce95d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a763f61657cb001f502ef685d1b5edd33"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8cpp.html#a763f61657cb001f502ef685d1b5edd33">Pause_Button_Clicked</a> (GtkWidget *p_wdgt, gpointer p_data)</td></tr>
+<tr class="memdesc:a763f61657cb001f502ef685d1b5edd33"><td class="mdescLeft">&#160;</td><td class="mdescRight">Callback for when the Pause button is clicked.  <a href="#a763f61657cb001f502ef685d1b5edd33">More...</a><br /></td></tr>
+<tr class="separator:a763f61657cb001f502ef685d1b5edd33"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a133607be026e45cbd298bb6644ac5bc4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8cpp.html#a133607be026e45cbd298bb6644ac5bc4">button_exit_clicked</a> (GtkWidget *p_wdgt, gpointer p_data)</td></tr>
 <tr class="memdesc:a133607be026e45cbd298bb6644ac5bc4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Callback for when the exit button is clicked.  <a href="#a133607be026e45cbd298bb6644ac5bc4">More...</a><br /></td></tr>
 <tr class="separator:a133607be026e45cbd298bb6644ac5bc4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acdc2d5905f085d0c46710e76b938db1d"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8cpp.html#acdc2d5905f085d0c46710e76b938db1d">ConnectTeensy</a> ()</td></tr>
+<tr class="separator:acdc2d5905f085d0c46710e76b938db1d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3c04138a5bfe5d72780bb7e82a18e627"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8cpp.html#a3c04138a5bfe5d72780bb7e82a18e627">main</a> (int argc, char **argv)</td></tr>
 <tr class="memdesc:a3c04138a5bfe5d72780bb7e82a18e627"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets up the GUI pointers, the mutex, and everything else needed for the GUI to run properly.  <a href="#a3c04138a5bfe5d72780bb7e82a18e627">More...</a><br /></td></tr>
 <tr class="separator:a3c04138a5bfe5d72780bb7e82a18e627"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
+Variables</h2></td></tr>
+<tr class="memitem:a8803bad4584f2fee6828d5215ae97955"><td class="memItemLeft" align="right" valign="top">const char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8cpp.html#a8803bad4584f2fee6828d5215ae97955">PACKET_START_BYTE</a> = 0xAA</td></tr>
+<tr class="separator:a8803bad4584f2fee6828d5215ae97955"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:add097569d1a45ba43e4f8287aed04136"><td class="memItemLeft" align="right" valign="top">const char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8cpp.html#add097569d1a45ba43e4f8287aed04136">MOTOR_COMMAND</a> = 'M'</td></tr>
+<tr class="separator:add097569d1a45ba43e4f8287aed04136"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a584e64860a72bb05394f22db7e296e2c"><td class="memItemLeft" align="right" valign="top">const char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8cpp.html#a584e64860a72bb05394f22db7e296e2c">FLOW_COMMAND</a> = 'F'</td></tr>
+<tr class="separator:a584e64860a72bb05394f22db7e296e2c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aee503dcccffad5b46d30ffcf9030cacb"><td class="memItemLeft" align="right" valign="top">const char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8cpp.html#aee503dcccffad5b46d30ffcf9030cacb">TEST_COMMAND</a> = 'T'</td></tr>
+<tr class="separator:aee503dcccffad5b46d30ffcf9030cacb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abfbbadb4a9072557e03b3097bebb2b4a"><td class="memItemLeft" align="right" valign="top">const unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8cpp.html#abfbbadb4a9072557e03b3097bebb2b4a">PACKET_OVERHEAD_BYTES</a> = 3</td></tr>
+<tr class="separator:abfbbadb4a9072557e03b3097bebb2b4a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab6aabc808b4139ac495b1d8378c76837"><td class="memItemLeft" align="right" valign="top">const unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8cpp.html#ab6aabc808b4139ac495b1d8378c76837">PACKET_MIN_BYTES</a> = <a class="el" href="main_8cpp.html#abfbbadb4a9072557e03b3097bebb2b4a">PACKET_OVERHEAD_BYTES</a> + 1</td></tr>
+<tr class="separator:ab6aabc808b4139ac495b1d8378c76837"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2e13f0adaa99b89638d90d97de879409"><td class="memItemLeft" align="right" valign="top">const unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8cpp.html#a2e13f0adaa99b89638d90d97de879409">PACKET_MAX_BYTES</a> = 255</td></tr>
+<tr class="separator:a2e13f0adaa99b89638d90d97de879409"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a658be78efae5944952750f0d184f513d"><td class="memItemLeft" align="right" valign="top">const int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8cpp.html#a658be78efae5944952750f0d184f513d">MAX_NUM_OF_STEPS</a> = 2000</td></tr>
+<tr class="separator:a658be78efae5944952750f0d184f513d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Macro Definition Documentation</h2>
+<a class="anchor" id="ac2a19dd2750d93ef3e98be522ff6279f"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define BETWEEN_CHARACTERS_TIMEOUT_US&#160;&#160;&#160;1000</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Timeout time between character input. </p>
+
+</div>
+</div>
+<a class="anchor" id="aab055a3201db4a4140afb8d351ed7789"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define FLOW_LABEL_UPDATE_MS&#160;&#160;&#160;100</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Time(in milliseconds) between calling the UpdateFlowLabel function. </p>
+
+</div>
+</div>
 <a class="anchor" id="a7ffcc27689dcff0f1f551da88cfd56bd"></a>
 <div class="memitem">
 <div class="memproto">
@@ -161,56 +241,21 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a736aeda0653ee56f9d9a4fd12b45166e"></a>
+<a class="anchor" id="ac5177a3a187eb070f0c975ca93a59f93"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define VOLTAGE_DISPLAY_UPDATE_MS&#160;&#160;&#160;100</td>
+          <td class="memname">#define READ_THREAD_SLEEP_DURATION_US&#160;&#160;&#160;100000</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Time(in milliseconds) between calls to voltage display function. </p>
+<p>Duration to sleep while waiting for input. </p>
 
 </div>
 </div>
 <h2 class="groupheader">Function Documentation</h2>
-<a class="anchor" id="ad3cf8a83b5ee3d3d19ed77fe61a7497d"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void button_closedevice_clicked </td>
-          <td>(</td>
-          <td class="paramtype">GtkWidget *&#160;</td>
-          <td class="paramname"><em>p_wdgt</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">gpointer&#160;</td>
-          <td class="paramname"><em>p_data</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Callback for when the close device button is clicked. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">Standard</td><td>parameters for callback function</td></tr>
-  </table>
-  </dd>
-</dl>
-<p>Disables the close device button and enables the open device button.Closes the serial port which has been opened by the open device callback </p>
-
-</div>
-</div>
 <a class="anchor" id="a133607be026e45cbd298bb6644ac5bc4"></a>
 <div class="memitem">
 <div class="memproto">
@@ -246,12 +291,27 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a6476bac2120be7b53beae69b27b392bc"></a>
+<a class="anchor" id="acdc2d5905f085d0c46710e76b938db1d"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void button_opendevice_clicked </td>
+          <td class="memname">bool ConnectTeensy </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a451d1a8fa0a0af9df207d0efd8c53a13"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void FC_Button_Clicked </td>
           <td>(</td>
           <td class="paramtype">GtkWidget *&#160;</td>
           <td class="paramname"><em>p_wdgt</em>, </td>
@@ -270,23 +330,23 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Callback for when the open device button is clicked. </p>
+<p>Callback for when the FullyClose button is clicked. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">Standard</td><td>parameters for callback function</td></tr>
   </table>
   </dd>
 </dl>
-<p>Disables the open device button and enables the close device button. Opens the device from the serial port which has been entered in the entry_sd widget </p>
+<p>Fully closes the valve. </p>
 
 </div>
 </div>
-<a class="anchor" id="aea199709c0a72e65d41b5e2cb32e65de"></a>
+<a class="anchor" id="ad7fda7948458cf97a5955465f47eb385"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void button_send_clicked </td>
+          <td class="memname">void FO_Button_Clicked </td>
           <td>(</td>
           <td class="paramtype">GtkWidget *&#160;</td>
           <td class="paramname"><em>p_wdgt</em>, </td>
@@ -305,14 +365,91 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Callback for when the send button is clicked. </p>
+<p>Callback for when the FullyClose button is clicked. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">Standard</td><td>parameters for callback function</td></tr>
   </table>
   </dd>
 </dl>
-<p>Gets the values from red/blue/green value, sets the red/blue/green sliders to the recieved values, prepairs an appropriate package with recieved values, sends package to the Teensy, and sets the txtstring to the sent package to display it to the user. </p>
+<p>Fullyopens the valve. </p>
+
+</div>
+</div>
+<a class="anchor" id="a81bf317a136e44ea7af01a327e4c078b"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool FullyClose </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Fully closes the valve from wherever it is. </p>
+
+</div>
+</div>
+<a class="anchor" id="a6859d31b028a8ee76e4b468e0bea56e0"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool FullyOpen </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Fully opens the valve from wherever it is. </p>
+
+</div>
+</div>
+<a class="anchor" id="a2a04cdc410897b3b3237efb843492820"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">double GetFlow </td>
+          <td>(</td>
+          <td class="paramtype">time_t&#160;</td>
+          <td class="paramname"><em>startTime</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Calculates the current flow through the valve. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">System</td><td>time</td></tr>
+  </table>
+  </dd>
+</dl>
+<p>Using the system time parameter, this function will return the flow rate since that time. </p>
+
+</div>
+</div>
+<a class="anchor" id="aaadaced0bd0e7966a54cb7a2163236ce"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int GetSerialPacket </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Function that recieves a packet from the Teensy. </p>
+<p>This function collects a packet from the Teensy, validates it, and then returns the important information from it. </p>
 
 </div>
 </div>
@@ -344,6 +481,24 @@ Functions</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a26af4e2465c068934ecf3998bd74c816"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">gpointer MasterLogic </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Controls the valve based on the current flow from the flow sensor. </p>
+<p>This function is created as a thread when the Start Button is pressed. Once created, this function will read the current flow from the flow sensor and then either open or close the valve to better achieve the target flow. </p>
+
+</div>
+</div>
 <a class="anchor" id="a42831ac9db9027fad5a908cf6945ba5d"></a>
 <div class="memitem">
 <div class="memproto">
@@ -369,12 +524,12 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="af74b39416a3b41e57319f7f474652e0d"></a>
+<a class="anchor" id="a763f61657cb001f502ef685d1b5edd33"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void scale_rgb_value_changed </td>
+          <td class="memname">void Pause_Button_Clicked </td>
           <td>(</td>
           <td class="paramtype">GtkWidget *&#160;</td>
           <td class="paramname"><em>p_wdgt</em>, </td>
@@ -393,23 +548,101 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Callback for when any of the sliders are changed. </p>
+<p>Callback for when the Pause button is clicked. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">Standard</td><td>parameters for callback function</td></tr>
   </table>
   </dd>
 </dl>
-<p>Gets the values from red/blue/green slider, sets the red/blue/green values to the recieved values, prepairs an appropriate package with recieved values, sends package to the Teensy, and sets the txtstring to the sent package to display it to the user. </p>
+<p>Ends the MasterLogic thread and enables all other buttons. </p>
 
 </div>
 </div>
-<a class="anchor" id="aa6b3686a173a9e36b19c9e581c3126c9"></a>
+<a class="anchor" id="a61894ac0e560e66b3a268cf6b64ce95d"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">gboolean Voltage_Display_Displayer </td>
+          <td class="memname">void Start_Button_Clicked </td>
+          <td>(</td>
+          <td class="paramtype">GtkWidget *&#160;</td>
+          <td class="paramname"><em>p_wdgt</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gpointer&#160;</td>
+          <td class="paramname"><em>p_data</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Callback for when the Start button is clicked. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">Standard</td><td>parameters for callback function</td></tr>
+  </table>
+  </dd>
+</dl>
+<p>Creates a MasterLogic thread if there isn't one already and then disables all buttons except the exit button and enables the pause button. </p>
+
+</div>
+</div>
+<a class="anchor" id="a04eb29c3961a5a65537a7888e6ac8a0e"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool TurnMotor </td>
+          <td>(</td>
+          <td class="paramtype">char&#160;</td>
+          <td class="paramname"><em>motorDirection</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>numOfSteps</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>stepMultiplier</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Sends a message to the Teensy to turn the motor. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">motorDirection</td><td>specifies if the motor should be opened or closed. </td></tr>
+    <tr><td class="paramname">numOfSteps</td><td>must be between 0-255. </td></tr>
+    <tr><td class="paramname">stepMultiplier</td><td>indicates how many times numOfSteps should be executed.</td></tr>
+  </table>
+  </dd>
+</dl>
+<p>Sends a message to the Teensy and then waits for a response. If the correct response is recieved this function returns true. </p>
+
+</div>
+</div>
+<a class="anchor" id="abefe694e42353d877275fba421196e5d"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">gboolean UpdateFlowLabel </td>
           <td>(</td>
           <td class="paramtype">gpointer&#160;</td>
           <td class="paramname"><em>p_gptr</em></td><td>)</td>
@@ -418,21 +651,146 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Prints the Voltage value to the display field for the voltage. </p>
+<p>Updates the current flow that is displayed to the user. </p>
+
+</div>
+</div>
+<a class="anchor" id="a7a0e5c97210cd21235162f697f3992b7"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool validatePacket </td>
+          <td>(</td>
+          <td class="paramtype">unsigned int&#160;</td>
+          <td class="paramname"><em>packetSize</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">unsigned char *&#160;</td>
+          <td class="paramname"><em>packet</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Validates a packet. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">gpointer</td><td>is one of the standard callback function parameters allowing it to change the voltage display value</td></tr>
+    <tr><td class="paramname">Size</td><td>of the packet and a pointer to the packet</td></tr>
   </table>
   </dd>
 </dl>
-<p>Locks the mutex protecting the voltage display and sets the voltage label to the calculated voltage value it then unlocks the mutex and returns true. </p>
+<p>This function validates a packet recieved from the Teensy. </p>
+
+</div>
+</div>
+<h2 class="groupheader">Variable Documentation</h2>
+<a class="anchor" id="a584e64860a72bb05394f22db7e296e2c"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const char FLOW_COMMAND = 'F'</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a658be78efae5944952750f0d184f513d"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const int MAX_NUM_OF_STEPS = 2000</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="add097569d1a45ba43e4f8287aed04136"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const char MOTOR_COMMAND = 'M'</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a2e13f0adaa99b89638d90d97de879409"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const unsigned int PACKET_MAX_BYTES = 255</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="ab6aabc808b4139ac495b1d8378c76837"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const unsigned int PACKET_MIN_BYTES = <a class="el" href="main_8cpp.html#abfbbadb4a9072557e03b3097bebb2b4a">PACKET_OVERHEAD_BYTES</a> + 1</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="abfbbadb4a9072557e03b3097bebb2b4a"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const unsigned int PACKET_OVERHEAD_BYTES = 3</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a8803bad4584f2fee6828d5215ae97955"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const char PACKET_START_BYTE = 0xAA</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="aee503dcccffad5b46d30ffcf9030cacb"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const char TEST_COMMAND = 'T'</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
 
 </div>
 </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Nov 16 2016 19:43:27 for TeensyControl by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri May 11 2018 12:17:11 for Pi-Flow by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.8
 </small></address>

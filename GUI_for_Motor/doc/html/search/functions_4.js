@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['validatepacket',['validatePacket',['../serialreadthread_8cpp.html#a7a0e5c97210cd21235162f697f3992b7',1,'serialreadthread.cpp']]],
-  ['voltage_5fdisplay_5fdisplayer',['Voltage_Display_Displayer',['../main_8cpp.html#aa6b3686a173a9e36b19c9e581c3126c9',1,'main.cpp']]]
+  ['main',['main',['../main_8cpp.html#a3c04138a5bfe5d72780bb7e82a18e627',1,'main.cpp']]],
+  ['masterlogic',['MasterLogic',['../main_8cpp.html#a26af4e2465c068934ecf3998bd74c816',1,'MasterLogic():&#160;main.cpp'],['../global_8h.html#a26af4e2465c068934ecf3998bd74c816',1,'MasterLogic():&#160;main.cpp']]]
 ];

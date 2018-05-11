@@ -1,8 +1,9 @@
 var searchData=
 [
-  ['scale_5frgb_5fvalue_5fchanged',['scale_rgb_value_changed',['../main_8cpp.html#af74b39416a3b41e57319f7f474652e0d',1,'main.cpp']]],
-  ['sendbutton',['sendbutton',['../structGui__Window__AppWidgets.html#abf5999d45638499790b53ef82c9fe164',1,'Gui_Window_AppWidgets']]],
-  ['ser_5fdev',['ser_dev',['../global_8cpp.html#ae6d733e6d4da52ea2dae8e56b000e5de',1,'ser_dev():&#160;global.cpp'],['../global_8h.html#ae6d733e6d4da52ea2dae8e56b000e5de',1,'ser_dev():&#160;global.cpp']]],
-  ['serial_5fread_5fthread',['Serial_Read_Thread',['../serialreadthread_8cpp.html#a520454bd8af0b558cd3f0fe7f6f3cda3',1,'Serial_Read_Thread():&#160;serialreadthread.cpp'],['../global_8h.html#a520454bd8af0b558cd3f0fe7f6f3cda3',1,'Serial_Read_Thread():&#160;serialreadthread.cpp']]],
-  ['serialreadthread_2ecpp',['serialreadthread.cpp',['../serialreadthread_8cpp.html',1,'']]]
+  ['packet_5fmax_5fbytes',['PACKET_MAX_BYTES',['../main_8cpp.html#a2e13f0adaa99b89638d90d97de879409',1,'main.cpp']]],
+  ['packet_5fmin_5fbytes',['PACKET_MIN_BYTES',['../main_8cpp.html#ab6aabc808b4139ac495b1d8378c76837',1,'main.cpp']]],
+  ['packet_5foverhead_5fbytes',['PACKET_OVERHEAD_BYTES',['../main_8cpp.html#abfbbadb4a9072557e03b3097bebb2b4a',1,'main.cpp']]],
+  ['packet_5fstart_5fbyte',['PACKET_START_BYTE',['../main_8cpp.html#a8803bad4584f2fee6828d5215ae97955',1,'main.cpp']]],
+  ['pause_5fbutton_5fclicked',['Pause_Button_Clicked',['../main_8cpp.html#a763f61657cb001f502ef685d1b5edd33',1,'main.cpp']]],
+  ['pausebutton',['PauseButton',['../structGui__Window__AppWidgets.html#abbe3d5b6bc6341c7b842b88583a17218',1,'Gui_Window_AppWidgets']]]
 ];

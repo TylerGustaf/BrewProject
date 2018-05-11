@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['the_20teensy_20led_20controller',['The Teensy LED Controller',['../index.html',1,'']]],
-  ['txtstring',['txtstring',['../structGui__Window__AppWidgets.html#acc3cbaf42af04c3b495f4c421d5f88a7',1,'Gui_Window_AppWidgets']]]
+  ['read_5fthread_5fsleep_5fduration_5fus',['READ_THREAD_SLEEP_DURATION_US',['../main_8cpp.html#ac5177a3a187eb070f0c975ca93a59f93',1,'main.cpp']]]
 ];

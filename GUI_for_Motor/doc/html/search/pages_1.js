@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['the_20teensy_20led_20controller',['The Teensy LED Controller',['../index.html',1,'']]]
+  ['the_20pi_2dflow_20controller',['The Pi-Flow Controller',['../index.html',1,'']]]
 ];

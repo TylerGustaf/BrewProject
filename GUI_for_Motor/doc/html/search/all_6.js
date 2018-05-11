@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['label_5fvoltage',['label_voltage',['../structGui__Window__AppWidgets.html#aeb310e23930bf354b1cab8645a221a91',1,'Gui_Window_AppWidgets']]]
+  ['kill_5fall_5fthreads',['kill_all_threads',['../global_8cpp.html#a1de67c525c7e2f7d0790eaec6f518ff2',1,'kill_all_threads():&#160;global.cpp'],['../global_8h.html#a1de67c525c7e2f7d0790eaec6f518ff2',1,'kill_all_threads():&#160;global.cpp']]]
 ];
