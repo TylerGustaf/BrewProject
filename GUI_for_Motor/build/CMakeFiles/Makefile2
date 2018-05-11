@@ -59,7 +59,7 @@ CMAKE_BINARY_DIR = /home/pi/Desktop/BrewProject/GUI_for_Motor/build
 CMakeFiles/TeensyControl.dir/all:
 	$(MAKE) -f CMakeFiles/TeensyControl.dir/build.make CMakeFiles/TeensyControl.dir/depend
 	$(MAKE) -f CMakeFiles/TeensyControl.dir/build.make CMakeFiles/TeensyControl.dir/build
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/pi/Desktop/BrewProject/GUI_for_Motor/build/CMakeFiles  1 2 3
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/pi/Desktop/BrewProject/GUI_for_Motor/build/CMakeFiles  1 2
 	@echo "Built target TeensyControl"
 .PHONY : CMakeFiles/TeensyControl.dir/all
 
@@ -69,7 +69,7 @@ all: CMakeFiles/TeensyControl.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/TeensyControl.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/pi/Desktop/BrewProject/GUI_for_Motor/build/CMakeFiles 3
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/pi/Desktop/BrewProject/GUI_for_Motor/build/CMakeFiles 2
 	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/TeensyControl.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/pi/Desktop/BrewProject/GUI_for_Motor/build/CMakeFiles 0
 .PHONY : CMakeFiles/TeensyControl.dir/rule

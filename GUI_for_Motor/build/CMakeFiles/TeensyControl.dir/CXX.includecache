@@ -14,6 +14,10 @@ stdlib.h
 iostream
 -
 
+/home/pi/Desktop/BrewProject/GUI_for_Motor/src/global.cpp
+global.h
+/home/pi/Desktop/BrewProject/GUI_for_Motor/src/global.h
+
 /home/pi/Desktop/BrewProject/GUI_for_Motor/src/main.cpp
 global.h
 /home/pi/Desktop/BrewProject/GUI_for_Motor/src/global.h

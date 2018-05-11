@@ -1,13 +1,14 @@
 /*!
  * \author Tyler Gustaf
  * \version 1.0
- * \date 11-16-2016
+ * \date 5-3-2018
  * \bug The application does not terminate properly by clicking the X on the main window
+*  \bug The application does not automatically terminate when it does not sucessfully connect to the Teensy.
  *
  * \copyright GNU Public License
- * \mainpage The Teensy LED Controller
+ * \mainpage The Pi-Flow Controller
  * \section intro_sec Introduction
- * This code is used along with the Teensy  Led_and_Pot_Serial code to control the LED connected to the Teensy as well as print the potentiometer voltage which is also connected to the Teensy.
+ * This code is used along with the TeensyMotorController.ino code to control the Flow Valve connected to the Teensy.
  * \section compile_sec Compilation
  * The following will explain how to complie the code using CMake and Make
  * \subsection CMake
@@ -26,7 +27,7 @@
 #include <errno.h>
 #include <ctime>
 
-#define FLOW_LABEL_UPDATE_MS 100	//!< Time(in milliseconds) between calls to voltage display function
+#define FLOW_LABEL_UPDATE_MS 100	//!< Time(in milliseconds) between calling the UpdateFlowLabel function
 #define READ_THREAD_SLEEP_DURATION_US 100000	//!< Duration to sleep while waiting for input
 #define BETWEEN_CHARACTERS_TIMEOUT_US 1000		//!< Timeout time between character input
 
@@ -48,7 +49,9 @@ void ObtainGuiWidgets(GtkBuilder *p_builder)
   GuiappGET(TargetFlowInput);
   GuiappGET(FlowLabel);
 }
-
+/*
+**Constants and function prototypes
+*/
 const char PACKET_START_BYTE = 0xAA;
 const char MOTOR_COMMAND = 'M';
 const char FLOW_COMMAND = 'F';
@@ -62,6 +65,9 @@ bool TurnMotor(char, int, int);
 double GetFlow(time_t);
 int GetSerialPacket();
 
+/*!
+ * \brief Updates the current flow that is displayed to the user.
+ */
 gboolean  UpdateFlowLabel(gpointer p_gptr)
 {
   // do not change this function
@@ -71,7 +77,9 @@ gboolean  UpdateFlowLabel(gpointer p_gptr)
   return true;
 }
 
-
+/*!
+ * \brief Fully opens the valve from wherever it is.
+ */
 bool FullyOpen()
 {
     int steps = MAX_NUM_OF_STEPS - numOfSteps;
@@ -82,10 +90,12 @@ bool FullyOpen()
     }
     TurnMotor('B', 200, multi);
     TurnMotor('B', steps, 1);
-    numOfSteps = 2000;
+    numOfSteps = MAX_NUM_OF_STEPS;
     return true;
 }
-
+/*!
+ * \brief Fully closes the valve from wherever it is.
+ */
 bool FullyClose()
 {
     int steps = numOfSteps;
@@ -100,16 +110,20 @@ bool FullyClose()
     return true;
 }
 
+/*!
+ * \brief Controls the valve based on the current flow from the flow sensor.
+* \details This function is created as a thread when the Start Button is pressed. Once created, this function will read the current flow from the flow sensor and then either open or close the valve to better achieve the target flow.
+ */
 gpointer MasterLogic()
 {
     time_t startTime;
     int steps = 0, multi = 0;
     double smallError = targetFlow*0.25;
-    double mediumError = targetFlow*0.5;
-    double largeError = targetFlow*0.75;
     double flowRate;
     startTime = time(0);
-          bool forward = true;
+    flowRate = GetFlow(startTime);
+    startTime = time(0);
+    usleep(1000000); //sleep for 1 second
     while(!kill_all_threads){
         flowRate = GetFlow(startTime);
         startTime = time(0);
@@ -117,55 +131,9 @@ gpointer MasterLogic()
         g_mutex_lock(flow_label_mutex);
         sprintf(label_recieved_value,"%.2f", flowRate);
         g_mutex_unlock(flow_label_mutex);
-/*
-        //Handle Large Error
-        if(flowRate < (targetFlow - largeError)){
-            steps = 225;
-            multi = 2;
-            if((numOfSteps+(steps*multi)) > MAX_NUM_OF_STEPS){
-                steps -= (((numOfSteps+(steps*multi)) - MAX_NUM_OF_STEPS) / multi);
-            }
-            TurnMotor('B', steps, multi);
-            startTime = time(0);
-            numOfSteps += (steps*multi);
-  printf("Opening Large Error\n");
-        }
-        else if(flowRate > (targetFlow + largeError)){
-            steps = 225;
-            multi = 2;
-            if((numOfSteps-(steps*multi)) < 0){
-                steps += ((numOfSteps-(steps*multi)) / multi);
-            }
-            TurnMotor('F', steps, multi);
-            startTime = time(0);
-            numOfSteps -= (steps*multi);
-  printf("Closing Large Error\n");
-        }
-        //Handle Medium Error
-        else if(flowRate < (targetFlow - mediumError)){
-            steps = 175;
-            multi = 2;
-            if((numOfSteps+(steps*multi)) > MAX_NUM_OF_STEPS){
-                steps -= (((numOfSteps+(steps*multi)) - MAX_NUM_OF_STEPS) / multi);
-            }
-            TurnMotor('B', steps, multi);
-            startTime = time(0);
-            numOfSteps += (steps*multi);
-  printf("Opening Medium Error\n");
-        }
-        else if(flowRate > (targetFlow + mediumError)){
-            steps = 175;
-            multi = 2;
-            if((numOfSteps-(steps*multi)) < 0){
-                steps += ((numOfSteps-(steps*multi)) / multi);
-            }
-            TurnMotor('F', steps, multi);
-            startTime = time(0);
-            numOfSteps -= (steps*multi);
-  printf("Closing Medium Error\n");
-        }
+
         //Handle Small Error
-        else*/ if(flowRate < (targetFlow - smallError)){
+        if(flowRate < (targetFlow - smallError)){
             steps = 200;
             multi = 1;
             if((numOfSteps+(steps*multi)) > MAX_NUM_OF_STEPS){
@@ -174,7 +142,7 @@ gpointer MasterLogic()
             TurnMotor('B', steps, multi);
             startTime = time(0);
             numOfSteps += (steps*multi);
-  printf("Opening Small Error\n");
+  printf("Opening Small Error\n"); //Removing these print statements caused the program to not behave properly
         }
         else if(flowRate > (targetFlow + smallError)){
             steps = 200;
@@ -185,23 +153,20 @@ gpointer MasterLogic()
             TurnMotor('F', steps, multi);
             startTime = time(0);
             numOfSteps -= (steps*multi);
-  printf("Closing Small Error\n");
+  printf("Closing Small Error\n"); //Removing these print statements caused the program to not behave properly
         }
         usleep(1000000); //sleep for 1 second
-/*
-        if(forward){
-          TurnMotor('F', 200, 1);
-          forward = false;
-       }
-       else{
-          TurnMotor('B', 200, 1);
-          forward = true;
-       }
-*/
+
     }//end of while loop
 
 }//end of MasterLogic
-
+/*!
+ * \brief Sends a message to the Teensy to turn the motor.
+ * \param motorDirection specifies if the motor should be opened or closed.
+* \param numOfSteps must be between 0-255.
+* \param stepMultiplier indicates how many times numOfSteps should be executed.
+* \details Sends a message to the Teensy and then waits for a response. If the correct response is recieved this function returns true.
+ */
 bool TurnMotor(char motorDirection, int numOfSteps, int stepMultiplier)
 {
     if(!(motorDirection == 'F' || motorDirection == 'B')){
@@ -232,7 +197,11 @@ bool TurnMotor(char motorDirection, int numOfSteps, int stepMultiplier)
         return false;
     }
 }
-
+/*!
+ * \brief Calculates the current flow through the valve
+ * \param System time
+ * \details Using the system time parameter, this function will return the flow rate since that time.
+ */
 double GetFlow(time_t startTime)
 {
     time_t endTime;
@@ -256,7 +225,11 @@ double GetFlow(time_t startTime)
     flowRate = (flowRate * 6.50) / (endTime - startTime);
     return flowRate;
 }
-
+/*!
+ * \brief Validates a packet
+ * \param Size of the packet and a pointer to the packet
+ * \details This function validates a packet recieved from the Teensy.
+ */
 bool validatePacket(unsigned int packetSize, unsigned char *packet)
 {
     //check the packet size      
@@ -283,7 +256,10 @@ bool validatePacket(unsigned int packetSize, unsigned char *packet)
     // all validation checks passed, the packet is valid
     return true;
 }
-
+/*!
+ * \brief Function that recieves a packet from the Teensy
+ * \details This function collects a packet from the Teensy, validates it, and then returns the important information from it. 
+ */
 int GetSerialPacket()
 {
     ssize_t r_res;
@@ -293,7 +269,7 @@ int GetSerialPacket()
     unsigned int packetSize = PACKET_MIN_BYTES;		//Holds the size of the packet recieved from the Teensy
 
     //Continuously listen for packets from teensy
-    for(int i = 0; i < 10000 && !kill_all_threads; i++){  
+    while(!kill_all_threads){  
         if(ser_teensy1!=-1){  
             r_res = read(ser_teensy1,ob,1);
             if(r_res==0){
@@ -337,12 +313,11 @@ int GetSerialPacket()
                 if(count >= packetSize){
                     if(validatePacket(packetSize, buffer)){  //If the packet is valid,
                         //Use the data from the packet
-                        //g_mutex_lock(mutex_to_protect_voltage_display);
                         if(buffer[2] == 'M'){
                             return 1;
                         }
                         else if(buffer[2] == 'F'){
-                            return buffer[3];
+                            return (buffer[3] + (buffer[4]*256));
                         }
                         else if(buffer[2] == 'T'){
                             return 1007;
@@ -350,7 +325,6 @@ int GetSerialPacket()
                         else{
                             return 0;
                         }
-                        //g_mutex_unlock(mutex_to_protect_voltage_display);
                     }
                     //reset the count
                     count = 0;
@@ -362,16 +336,29 @@ int GetSerialPacket()
     }
     return 0;
 }
-
+/*!
+ * \brief Callback for when the FullyClose button is clicked
+ * \param Standard parameters for callback function
+ * \details Fullyopens the valve.
+ */
 extern "C" void FO_Button_Clicked(GtkWidget *p_wdgt, gpointer p_data )
 {
     FullyOpen();
 }
+/*!
+ * \brief Callback for when the FullyClose button is clicked
+ * \param Standard parameters for callback function
+ * \details Fully closes the valve.
+ */
 extern "C" void FC_Button_Clicked(GtkWidget *p_wdgt, gpointer p_data )
 {
     FullyClose();
 }
-
+/*!
+ * \brief Callback for when the Start button is clicked
+ * \param Standard parameters for callback function
+ * \details Creates a MasterLogic thread if there isn't one already and then disables all buttons except the exit button and enables the pause button.
+ */
 extern "C" void Start_Button_Clicked(GtkWidget *p_wdgt, gpointer p_data ) 
 {
     g_mutex_lock(master_logic_mutex);
@@ -396,7 +383,11 @@ extern "C" void Start_Button_Clicked(GtkWidget *p_wdgt, gpointer p_data )
     g_mutex_unlock(master_logic_mutex);
 
 }
-
+/*!
+ * \brief Callback for when the Pause button is clicked
+ * \param Standard parameters for callback function
+ * \details Ends the MasterLogic thread and enables all other buttons.
+ */
 extern "C" void Pause_Button_Clicked(GtkWidget *p_wdgt, gpointer p_data ) 
 {
     g_mutex_lock(master_logic_mutex);

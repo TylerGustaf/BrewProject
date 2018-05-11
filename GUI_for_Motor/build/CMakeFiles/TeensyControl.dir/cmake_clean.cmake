@@ -1,6 +1,5 @@
 file(REMOVE_RECURSE
   "CMakeFiles/TeensyControl.dir/src/global.cpp.o"
-  "CMakeFiles/TeensyControl.dir/src/serialreadthread.cpp.o"
   "CMakeFiles/TeensyControl.dir/src/main.cpp.o"
   "TeensyControl.pdb"
   "TeensyControl"

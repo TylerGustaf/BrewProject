@@ -6,7 +6,6 @@ set(CMAKE_DEPENDS_LANGUAGES
 set(CMAKE_DEPENDS_CHECK_CXX
   "/home/pi/Desktop/BrewProject/GUI_for_Motor/src/global.cpp" "/home/pi/Desktop/BrewProject/GUI_for_Motor/build/CMakeFiles/TeensyControl.dir/src/global.cpp.o"
   "/home/pi/Desktop/BrewProject/GUI_for_Motor/src/main.cpp" "/home/pi/Desktop/BrewProject/GUI_for_Motor/build/CMakeFiles/TeensyControl.dir/src/main.cpp.o"
-  "/home/pi/Desktop/BrewProject/GUI_for_Motor/src/serialreadthread.cpp" "/home/pi/Desktop/BrewProject/GUI_for_Motor/build/CMakeFiles/TeensyControl.dir/src/serialreadthread.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 

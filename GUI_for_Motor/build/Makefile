@@ -163,30 +163,6 @@ src/main.cpp.s:
 	$(MAKE) -f CMakeFiles/TeensyControl.dir/build.make CMakeFiles/TeensyControl.dir/src/main.cpp.s
 .PHONY : src/main.cpp.s
 
-src/serialreadthread.o: src/serialreadthread.cpp.o
-.PHONY : src/serialreadthread.o
-
-# target to build an object file
-src/serialreadthread.cpp.o:
-	$(MAKE) -f CMakeFiles/TeensyControl.dir/build.make CMakeFiles/TeensyControl.dir/src/serialreadthread.cpp.o
-.PHONY : src/serialreadthread.cpp.o
-
-src/serialreadthread.i: src/serialreadthread.cpp.i
-.PHONY : src/serialreadthread.i
-
-# target to preprocess a source file
-src/serialreadthread.cpp.i:
-	$(MAKE) -f CMakeFiles/TeensyControl.dir/build.make CMakeFiles/TeensyControl.dir/src/serialreadthread.cpp.i
-.PHONY : src/serialreadthread.cpp.i
-
-src/serialreadthread.s: src/serialreadthread.cpp.s
-.PHONY : src/serialreadthread.s
-
-# target to generate assembly for a file
-src/serialreadthread.cpp.s:
-	$(MAKE) -f CMakeFiles/TeensyControl.dir/build.make CMakeFiles/TeensyControl.dir/src/serialreadthread.cpp.s
-.PHONY : src/serialreadthread.cpp.s
-
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -202,9 +178,6 @@ help:
 	@echo "... src/main.o"
 	@echo "... src/main.i"
 	@echo "... src/main.s"
-	@echo "... src/serialreadthread.o"
-	@echo "... src/serialreadthread.i"
-	@echo "... src/serialreadthread.s"
 .PHONY : help
 
 

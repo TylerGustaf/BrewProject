@@ -35,18 +35,17 @@ extern int ser_teensy1;		//!< Serial devices handle
 
 //this is to gracefully shut down threads
 extern int kill_all_threads;	//!< Used to gracefully shut down threads
-extern int targetFlow;
-extern bool makeMLThread;
-extern int numOfSteps;
+extern int targetFlow;		//!< Stores the target flow specified by the user
+extern bool makeMLThread;	//!< Used to specify if a MasterLogic thread can be made
+extern int numOfSteps;	//!< Stores the number of steps the motor has taken so far
 
 //this variable is for communicating the voltage value string
-extern char label_recieved_value[40];			//!< Holds the calculated value of the voltage for displaying
+extern char label_recieved_value[40];		//!< Holds the current flow value that will be shown to the user
 
 //this is the mutex for the above variable
-extern GMutex *master_logic_mutex;		//!< Mutex for protecting the voltage display
-extern GMutex *flow_label_mutex;
-//prototype of function for serial read thread
-gpointer Serial_Read_Thread();
+extern GMutex *master_logic_mutex;		//!< Mutex for protecting the creation of a MasterLogic thread
+extern GMutex *flow_label_mutex;			//!< Mutex for protecting the flow label
+//prototype of function for MasterLogic thread
 gpointer MasterLogic();
 
 #endif

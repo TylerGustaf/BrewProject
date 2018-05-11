@@ -14,6 +14,7 @@ int y;
 int i,j;
 int state;
 volatile int flowCount = 0;
+volatile int overflowCount = 0;
  
 // define packet parameters
 const byte PACKET_START_BYTE = 0xAA;
@@ -85,22 +86,12 @@ void loop() {
         // validate the packet
         if(validatePacket(packetSize, buffer)){
           if(buffer[2] == 'M' && packetSize == 7){
-            //digitalWrite(led, HIGH);
-            //delay(1000);
-            //digitalWrite(led, LOW);
-            //delay(500);
-            //digitalWrite(led, HIGH);
-            //delay(1000);
-            //digitalWrite(led, LOW);
             noInterrupts();
             TurnMotor(buffer[3], buffer[4], buffer[5]);
             sendPacket(packetSize - PACKET_OVERHEAD_BYTES, buffer + 2);
             interrupts();
           }
           else if(buffer[2] == 'F'){
-            //digitalWrite(led, HIGH);
-            //delay(200);
-            //digitalWrite(led, LOW);
             noInterrupts();
             SendFlow();
             interrupts();
@@ -124,6 +115,8 @@ void loop() {
 //Default microstep mode function 
 void TurnMotor(char direc, int steps, int multi)
 {
+  flowCount = 0;
+  overflowCount = 0;
   digitalWrite(EN, LOW);
   if(direc == 'F'){
     digitalWrite(dir, LOW); //Pull direction pin low to move "forward"
@@ -142,13 +135,14 @@ void TurnMotor(char direc, int steps, int multi)
     }
   }
   flowCount = 0;
+  overflowCount = 0;
   resetEDPins();
 }
 
 boolean SendFlow()
 {
   // the payload size will stay constant
-  unsigned int packetSize = 2 + PACKET_OVERHEAD_BYTES;
+  unsigned int packetSize = 3 + PACKET_OVERHEAD_BYTES;
   // create the serial packet transmit buffer
   static byte packet[PACKET_MAX_BYTES];
   // populate the overhead fields
@@ -159,11 +153,14 @@ boolean SendFlow()
   packet[2] = 'F';
   checkSum = checkSum ^ packet[2];
   packet[3] = flowCount;
-  packet[4] = checkSum ^ packet[3];
+  checkSum = checkSum ^ packet[3];
+  packet[4] = overflowCount;
+  packet[5] = checkSum ^ packet[4];
   // send the packet
   Serial.write(packet, packetSize);
   Serial.flush();
   flowCount = 0;
+  overflowCount = 0;
   return true;
 }
 
@@ -237,9 +234,10 @@ boolean sendPacket(unsigned int payloadSize, byte *payload)
 
 void CountFlow()
 {
-  //digitalWrite(led, HIGH);
-  //delayMicroseconds(50000);
-  //digitalWrite(led, LOW);
   flowCount++;
+  if(flowCount == 256){
+    flowCount = 0;
+    overflowCount++;
+  }
 }
 

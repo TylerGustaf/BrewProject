@@ -72,32 +72,9 @@ CMakeFiles/TeensyControl.dir/src/global.cpp.o.provides: CMakeFiles/TeensyControl
 
 CMakeFiles/TeensyControl.dir/src/global.cpp.o.provides.build: CMakeFiles/TeensyControl.dir/src/global.cpp.o
 
-CMakeFiles/TeensyControl.dir/src/serialreadthread.cpp.o: CMakeFiles/TeensyControl.dir/flags.make
-CMakeFiles/TeensyControl.dir/src/serialreadthread.cpp.o: ../src/serialreadthread.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/pi/Desktop/BrewProject/GUI_for_Motor/build/CMakeFiles $(CMAKE_PROGRESS_2)
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/TeensyControl.dir/src/serialreadthread.cpp.o"
-	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/TeensyControl.dir/src/serialreadthread.cpp.o -c /home/pi/Desktop/BrewProject/GUI_for_Motor/src/serialreadthread.cpp
-
-CMakeFiles/TeensyControl.dir/src/serialreadthread.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/TeensyControl.dir/src/serialreadthread.cpp.i"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/pi/Desktop/BrewProject/GUI_for_Motor/src/serialreadthread.cpp > CMakeFiles/TeensyControl.dir/src/serialreadthread.cpp.i
-
-CMakeFiles/TeensyControl.dir/src/serialreadthread.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/TeensyControl.dir/src/serialreadthread.cpp.s"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/pi/Desktop/BrewProject/GUI_for_Motor/src/serialreadthread.cpp -o CMakeFiles/TeensyControl.dir/src/serialreadthread.cpp.s
-
-CMakeFiles/TeensyControl.dir/src/serialreadthread.cpp.o.requires:
-.PHONY : CMakeFiles/TeensyControl.dir/src/serialreadthread.cpp.o.requires
-
-CMakeFiles/TeensyControl.dir/src/serialreadthread.cpp.o.provides: CMakeFiles/TeensyControl.dir/src/serialreadthread.cpp.o.requires
-	$(MAKE) -f CMakeFiles/TeensyControl.dir/build.make CMakeFiles/TeensyControl.dir/src/serialreadthread.cpp.o.provides.build
-.PHONY : CMakeFiles/TeensyControl.dir/src/serialreadthread.cpp.o.provides
-
-CMakeFiles/TeensyControl.dir/src/serialreadthread.cpp.o.provides.build: CMakeFiles/TeensyControl.dir/src/serialreadthread.cpp.o
-
 CMakeFiles/TeensyControl.dir/src/main.cpp.o: CMakeFiles/TeensyControl.dir/flags.make
 CMakeFiles/TeensyControl.dir/src/main.cpp.o: ../src/main.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/pi/Desktop/BrewProject/GUI_for_Motor/build/CMakeFiles $(CMAKE_PROGRESS_3)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/pi/Desktop/BrewProject/GUI_for_Motor/build/CMakeFiles $(CMAKE_PROGRESS_2)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/TeensyControl.dir/src/main.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/TeensyControl.dir/src/main.cpp.o -c /home/pi/Desktop/BrewProject/GUI_for_Motor/src/main.cpp
 
@@ -121,14 +98,12 @@ CMakeFiles/TeensyControl.dir/src/main.cpp.o.provides.build: CMakeFiles/TeensyCon
 # Object files for target TeensyControl
 TeensyControl_OBJECTS = \
 "CMakeFiles/TeensyControl.dir/src/global.cpp.o" \
-"CMakeFiles/TeensyControl.dir/src/serialreadthread.cpp.o" \
 "CMakeFiles/TeensyControl.dir/src/main.cpp.o"
 
 # External object files for target TeensyControl
 TeensyControl_EXTERNAL_OBJECTS =
 
 TeensyControl: CMakeFiles/TeensyControl.dir/src/global.cpp.o
-TeensyControl: CMakeFiles/TeensyControl.dir/src/serialreadthread.cpp.o
 TeensyControl: CMakeFiles/TeensyControl.dir/src/main.cpp.o
 TeensyControl: CMakeFiles/TeensyControl.dir/build.make
 TeensyControl: CMakeFiles/TeensyControl.dir/link.txt
@@ -140,7 +115,6 @@ CMakeFiles/TeensyControl.dir/build: TeensyControl
 .PHONY : CMakeFiles/TeensyControl.dir/build
 
 CMakeFiles/TeensyControl.dir/requires: CMakeFiles/TeensyControl.dir/src/global.cpp.o.requires
-CMakeFiles/TeensyControl.dir/requires: CMakeFiles/TeensyControl.dir/src/serialreadthread.cpp.o.requires
 CMakeFiles/TeensyControl.dir/requires: CMakeFiles/TeensyControl.dir/src/main.cpp.o.requires
 .PHONY : CMakeFiles/TeensyControl.dir/requires
 
